@@ -60,9 +60,8 @@ public class MainActivity extends AppCompatActivity {
             ImageView imageView;
             if(view == null){
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(-2,
-                        dpPixelsHeight()));
-//                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageView.setLayoutParams(new GridView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT));
             }
             else {imageView = (ImageView) view;}
             imageView.setImageResource(mMoviesImages[position]);
@@ -72,19 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
         //test image for proving the layout
         private Integer[] mMoviesImages = {
-                R.drawable.iplay,R.drawable.iplay,
-                R.drawable.iplay,R.drawable.iplay,
-                R.drawable.iplay,R.drawable.iplay,
-                R.drawable.iplay,R.drawable.iplay,
-                R.drawable.iplay,R.drawable.iplay,
-                R.drawable.iplay,R.drawable.iplay,
-                R.drawable.iplay,R.drawable.iplay};
+                R.drawable.image,R.drawable.image,
+                R.drawable.image,R.drawable.image,
+                R.drawable.image,R.drawable.image,
+                R.drawable.image,R.drawable.image,
+                R.drawable.image,R.drawable.image,
+                R.drawable.image,R.drawable.image};
     }
-
-    private int dpPixelsHeight(){
-        DisplayMetrics displayMetrics = MainActivity.this.getResources().getDisplayMetrics();
-        int dpWidth = (int) (displayMetrics.widthPixels/displayMetrics.density);
-        return (int)(dpWidth * 1.3);
-    }
-
 }
