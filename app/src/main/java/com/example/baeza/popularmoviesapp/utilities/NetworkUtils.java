@@ -26,7 +26,7 @@ public final class NetworkUtils {
     private static final String API_KEY_FORMAT = "?api_key=";
 
 
-    private static final String RECOMMENDED_SIZE_MOBILE = "w185";
+    private static final String RECOMMENDED_SIZE_MOBILE = "w185/";
     private static final String format = "json";
 
     private static String URL_BASE_FOR_IMAGE_MOVIE = IMAGE_MOVIE_BASE_URL + RECOMMENDED_SIZE_MOBILE;
@@ -55,5 +55,9 @@ public final class NetworkUtils {
         Log.d(TAG, "Built URI " + url);
 
         return url;
+    }
+
+    public static String getUrlBaseForImageMovie() {
+        return URL_BASE_FOR_IMAGE_MOVIE;
     }
 }

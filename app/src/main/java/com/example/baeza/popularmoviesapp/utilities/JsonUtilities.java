@@ -23,7 +23,8 @@ public class JsonUtilities {
         Double vote_average = movie.optDouble("vote_average");
         String title = movie.getString("title");
         Date release_date = (Date) movie.opt("release_date");
-        String poster_path = movie.optString("poster_path");
+        String poster_path = NetworkUtils.getUrlBaseForImageMovie() +
+                movie.optString("poster_path");
 
         return new Movie(vote_average,
                 title,

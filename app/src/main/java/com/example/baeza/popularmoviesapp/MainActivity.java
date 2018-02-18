@@ -14,11 +14,15 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.baeza.popularmoviesapp.model.Movie;
 import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
+
+//    Movie movie;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public class ImageAdapter extends BaseAdapter{
         private Context mContext;
         public ImageAdapter(Context context){mContext = context;}
-        @Override public int getCount() {return mMoviesImages.length;}
+        @Override public int getCount() {return 8;}
         @Override public Object getItem(int position) {return null;}
         @Override public long getItemId(int position) {return 0;}
 
@@ -64,18 +68,16 @@ public class MainActivity extends AppCompatActivity {
                         ViewGroup.LayoutParams.MATCH_PARENT));
             }
             else {imageView = (ImageView) view;}
-            imageView.setImageResource(mMoviesImages[position]);
+
+            Picasso.with(MainActivity.this)
+//                    .load(movie.getPoster_path())
+                    .load("http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg")
+                    .into(imageView);
+
+
+            //imageView.setImageResource(mMoviesImages[position]);
             imageView.setAdjustViewBounds(true);
             return imageView;
         }
-
-        //test image for proving the layout
-        private Integer[] mMoviesImages = {
-                R.drawable.image,R.drawable.image,
-                R.drawable.image,R.drawable.image,
-                R.drawable.image,R.drawable.image,
-                R.drawable.image,R.drawable.image,
-                R.drawable.image,R.drawable.image,
-                R.drawable.image,R.drawable.image};
     }
 }
