@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">PopularMoviesApp</string>
-    <string name="key_movies">ADD_KEY_HERE</string>
+
+    <string name="key_movies">KEY HERE FOR MOVIES API</string>
+
     <string name="popularity">Popularity</string>
     <string name="top_rated">Top Rated</string>
+
+    <string name="error_message">Failed to get results, please try again</string>
 </resources>

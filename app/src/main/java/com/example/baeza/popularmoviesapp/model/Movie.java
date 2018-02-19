@@ -8,10 +8,10 @@ import java.util.List;
  */
 
 public class Movie {
-    private String title, overview, poster_path;
-    private Date release_date;
-    int runtime, id;
-    double vote_average;
+    private static String title, overview, poster_path;
+    private static Date release_date;
+    private static int runtime, id;
+    private static double vote_average;
 
     //constructor for trailer
     public Movie(List<String> trailerList){}
@@ -36,11 +36,13 @@ public class Movie {
         this.vote_average = vote_average;
         this.runtime = runtime;
     }
+    public Movie(){}
 
-    public Date getRelease_date() {return release_date;}
-    public String getTitle() {return title;}
-    public String getOverview() {return overview;}
-    public int getRuntime() {return runtime;}
-    public int getId() {return id;}
-    public double getVote_average() {return vote_average;}
+    public static String getTitle() {return title;}
+    public static String getOverview() {return overview;}
+    public static String getPoster_path() {return poster_path;}
+    public static Date getRelease_date() {return release_date;}
+    public static int getRuntime() {return runtime;}
+    public static int getId() {return id;}
+    public static double getVote_average() {return vote_average;}
 }

@@ -16,6 +16,7 @@ import java.util.List;
 
 public class JsonUtilities {
 
+    public static List<Movie> sMovieListMainScreen = new ArrayList<>();
 
     public static Movie parseDetailMovieJSON(String json) throws JSONException{
         JSONObject movie = new JSONObject(json);
@@ -41,15 +42,16 @@ public class JsonUtilities {
     public static Movie parseMoviesListJSON(String json) throws JSONException{
         JSONObject movies = new JSONObject(json);
         JSONArray results = movies.optJSONArray("results");
+        Movie movie;
 
         List<Movie> movieList = new ArrayList<Movie>();
-
         for(int i=0; i<results.length();i++){
             JSONObject result_value_i = results.getJSONObject(i);
             int id_i = result_value_i.optInt("id");
             String poster_path_i = result_value_i.optString("poster_path");
 
-//            movieList.add(mMovie(poster_path_i, id_i));
+            movie = new Movie(poster_path_i, id_i);
+            sMovieListMainScreen.add(movie);
         }
         return null;
     }
