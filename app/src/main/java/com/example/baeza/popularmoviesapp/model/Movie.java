@@ -8,7 +8,7 @@ import java.util.List;
  */
 
 public class Movie {
-    private String poster_path, title, overview;
+    private String title, overview, poster_path;
     private Date release_date;
     int runtime, id;
     double vote_average;
@@ -37,7 +37,7 @@ public class Movie {
         this.runtime = runtime;
     }
 
-    public String getPoster_path() {return poster_path;}
+    public Date getRelease_date() {return release_date;}
     public String getTitle() {return title;}
     public String getOverview() {return overview;}
     public int getRuntime() {return runtime;}
