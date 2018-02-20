@@ -8,6 +8,9 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.baeza.popularmoviesapp.model.Movie;
@@ -21,6 +24,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerAdapter.ListItemClickListener {
 
+    private ProgressBar mProgressBar;
+    private TextView tv_error_msg;
     public String TAG = this.getClass().getSimpleName();
     RecyclerView mRecyclerView;
     RecyclerAdapter mRecyclerAdapter;
@@ -35,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
         URL videoUrl = NetworkUtils.buildUrl("popular", getString(R.string.key_movies));
         new FetchMovies().execute(videoUrl);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
@@ -75,13 +79,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Toast.makeText(this, "Pressed "+clickedItemIndex, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Pressed "+clickedItemIndex+" id is: "+(mMovieList.get(clickedItemIndex)).getId(), Toast.LENGTH_SHORT).show();
     }
 
 
     public class FetchMovies extends AsyncTask<URL, Void, String>{
         @Override
-        protected void onPreExecute(){super.onPreExecute();}
+        protected void onPreExecute(){super.onPreExecute(); showProgressBar(true);}
 
         @Override
         protected String doInBackground(URL... urls) {
@@ -93,16 +97,20 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
                 return jsonMoviesResponse;
             }
             catch (Exception e){
+                showProgressBar(false);
+                showErrorMsg(true);
                 e.printStackTrace();
                 return  null;
             }
         }
         @Override
         protected void onPostExecute(String moviesData){
+            showProgressBar(false);
             if(moviesData != null && !moviesData.equals("")) {
                 Log.d(TAG, "movies data " + moviesData);
                 populateUIwithRecyclerView();
             } else {
+                showErrorMsg(true);
             }
         }
     }
@@ -116,6 +124,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
         }}
     }
 
+    private void showProgressBar(boolean isShownProgressBar){
+        mProgressBar = findViewById(R.id.progressBar);
+        if(isShownProgressBar){mProgressBar.setVisibility(View.VISIBLE);}
+        else{mProgressBar.setVisibility(View.INVISIBLE);}
+    }
+
+    private void showErrorMsg(boolean isShownErrorMsg){
+        tv_error_msg = findViewById(R.id.tv_error_msg);
+        if(isShownErrorMsg){tv_error_msg.setVisibility(View.VISIBLE);}
+        else{tv_error_msg.setVisibility(View.INVISIBLE);}
+    }
 
 //    private void showGridWithContent() {
 //        GridView gridView = findViewById(R.id.gridView);
