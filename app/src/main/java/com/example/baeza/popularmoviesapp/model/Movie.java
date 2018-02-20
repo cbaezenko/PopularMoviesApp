@@ -27,7 +27,6 @@ public class Movie {
                  String title,
                  String poster_path,
                  String overview,
-                 Date release_date,
                  int runtime){
         this.poster_path = poster_path;
         this.title = title;

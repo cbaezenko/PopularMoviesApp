@@ -1,7 +1,10 @@
 package com.example.baeza.popularmoviesapp.utilities;
 
+import android.content.Context;
 import android.net.Uri;
 import android.util.Log;
+
+import com.example.baeza.popularmoviesapp.MainActivity;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,31 +36,46 @@ public final class NetworkUtils {
     private static final String RECOMMENDED_SIZE_MOBILE = "w185/";
     private static final String format = "json";
 
-    private static String URL_BASE_FOR_IMAGE_MOVIE = IMAGE_MOVIE_BASE_URL + RECOMMENDED_SIZE_MOBILE;
+    private final static String URL_BASE_FOR_IMAGE_MOVIE = IMAGE_MOVIE_BASE_URL + RECOMMENDED_SIZE_MOBILE;
 
 
-    public static URL buildUrl(String path, String key){
-        if(path.equals("popular")) {
-            path = MOVIE_POPULAR;
-            }
-        else if (path.equals("top_rated")){
-            path = MOVIE_TOP_RATED;
-        }
+    public static URL buildUrl(int petition, String key){
+        String path = "";
+        switch (petition){
+            case MainActivity.POPULAR:{
+                path = MOVIE_BASE_URL + MOVIE_POPULAR + API_KEY_FORMAT + key;
+                break;}
+            case MainActivity.TOP_RATED:{
+                path = MOVIE_BASE_URL + MOVIE_TOP_RATED + API_KEY_FORMAT + key;
+                break;}}
 
-        Uri builtUir = Uri.parse(MOVIE_BASE_URL +
-                path +
-                API_KEY_FORMAT + key)
-                .buildUpon()
-                .build();
-
+        Uri builtUir = Uri.parse(path).buildUpon().build();
         URL url = null;
+        try{
+            url = new URL(builtUir.toString());
+        }catch (MalformedURLException e){
+            e.printStackTrace();}
+
+        Log.d(TAG, "Built URI " + url);
+        return url;
+    }
+
+    public static URL buildUrl(int petition, String key, int id){
+        String path = "";
+        switch (petition){
+            case MainActivity.DETAIL_MOVIE:{
+                path = MOVIE_BASE_URL+id+API_KEY_FORMAT+key;
+                break;}}
+
+        Uri builtUir = Uri.parse(path).buildUpon().build();
+        URL url = null;
+
         try{
             url = new URL(builtUir.toString());
         }catch (MalformedURLException e){
             e.printStackTrace();
         }
         Log.d(TAG, "Built URI " + url);
-
         return url;
     }
 

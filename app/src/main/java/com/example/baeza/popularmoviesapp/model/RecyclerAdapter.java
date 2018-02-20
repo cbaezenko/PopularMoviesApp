@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -42,9 +43,9 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerAdapter.Recyc
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         //String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-        String movieLeft = "http://image.tmdb.org/t/p/w185/"+(movieList.get(position)).getPoster_path();
+        String moviePath = NetworkUtils.getUrlBaseForImageMovie()+(movieList.get(position)).getPoster_path();
         Picasso.with(context)
-                .load(movieLeft)
+                .load(moviePath)
                 .into(holder.imageMovie);
     }
 
