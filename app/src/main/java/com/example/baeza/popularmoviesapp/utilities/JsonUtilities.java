@@ -1,5 +1,7 @@
 package com.example.baeza.popularmoviesapp.utilities;
 
+import android.util.Log;
+
 import com.example.baeza.popularmoviesapp.model.Movie;
 
 import org.json.JSONArray;
@@ -16,7 +18,8 @@ import java.util.List;
 
 public class JsonUtilities {
 
-    public static List<Movie> sMovieListMainScreen = new ArrayList<>();
+    private static String TAG = JsonUtilities.class.getSimpleName();
+   // public static List<Movie> sMovieListMainScreen = new ArrayList<>();
 
     public static Movie parseDetailMovieJSON(String json) throws JSONException{
         JSONObject movie = new JSONObject(json);
@@ -39,10 +42,10 @@ public class JsonUtilities {
                 runtime);
     }
 
-    public static Movie parseMoviesListJSON(String json) throws JSONException{
+    public static List<Movie> parseMoviesListJSON(String json) throws JSONException{
         JSONObject movies = new JSONObject(json);
         JSONArray results = movies.optJSONArray("results");
-        Movie movie;
+      //  Movie movie;
 
         List<Movie> movieList = new ArrayList<Movie>();
         for(int i=0; i<results.length();i++){
@@ -50,10 +53,14 @@ public class JsonUtilities {
             int id_i = result_value_i.optInt("id");
             String poster_path_i = result_value_i.optString("poster_path");
 
-            movie = new Movie(poster_path_i, id_i);
-            sMovieListMainScreen.add(movie);
+            Log.d(TAG, poster_path_i +" "+ id_i);
+
+            Movie movie = new Movie(poster_path_i, id_i);
+            movieList.add(movie);
+
+            Log.d(TAG," POSTER DENTRO DE LA LISTA "+(movieList.get(i)).getPoster_path());
         }
-        return null;
+        return movieList;
     }
 
     public static Movie parseMovieTrailerJSON(String json) throws JSONException{

@@ -27,27 +27,20 @@ import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements RecyclerAdapter.ListItemClickListener {
 
     public String TAG = this.getClass().getSimpleName();
-
     RecyclerView mRecyclerView;
     RecyclerAdapter mRecyclerAdapter;
+    private static List<Movie> mMovieList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mRecyclerView = findViewById(R.id.recyclerView_movies);
-
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerAdapter = new RecyclerAdapter(MainActivity.this,MainActivity.this);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
 
         URL videoUrl = NetworkUtils.buildUrl("popular", getString(R.string.key_movies));
         new FetchMovies().execute(videoUrl);
@@ -58,6 +51,16 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    private void populateUI(){
+        mRecyclerView = findViewById(R.id.recyclerView_movies);
+
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerAdapter = new RecyclerAdapter(MainActivity.this, MainActivity.this, mMovieList);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mRecyclerAdapter);
     }
 
     @Override
@@ -95,7 +98,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
             String jsonMoviesResponse = null;
             try{
                 jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(url);
-                JsonUtilities.parseMoviesListJSON(jsonMoviesResponse);
+
+                //mMovieList = JsonUtilities.parseMoviesListJSON(jsonMoviesResponse);
+
+                populateMovieList(JsonUtilities.parseMoviesListJSON(jsonMoviesResponse));
 
                 Log.d(TAG, "json is: " + jsonMoviesResponse.toString());
                 return jsonMoviesResponse;
@@ -109,11 +115,19 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
         @Override
         protected void onPostExecute(String moviesData){
             if(moviesData != null && !moviesData.equals("")) {
-
                 Log.d(TAG, "movies data " + moviesData);
+                populateUI();
             } else {
             }
         }
     }
-
+    private void populateMovieList( List<Movie> movieList){
+        if(mMovieList.size() != 0){
+            mMovieList.clear();
+        }
+        else {
+        for(int i = 0; i< movieList.size(); i++){
+            mMovieList.add(movieList.get(i));
+        }}
+    }
 }

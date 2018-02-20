@@ -2,6 +2,7 @@ package com.example.baeza.popularmoviesapp.model;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.utilities.JsonUtilities;
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 /**
  * Created by baeza on 19.02.2018.
  */
@@ -19,10 +22,13 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerAdapter.Recyc
 
     final private ListItemClickListener mOnClickListener;
     Context context;
+    List<Movie> movieList;
+    private static String TAG = RecyclerAdapter.class.getSimpleName();
 
-    public RecyclerAdapter(Context context,ListItemClickListener listener){
-        mOnClickListener=listener;
+    public RecyclerAdapter(Context context, ListItemClickListener listener, List<Movie> movieList){
+        mOnClickListener = listener;
         this.context = context;
+        this.movieList = movieList;
     }
 
     @Override
@@ -33,28 +39,47 @@ public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerAdapter.Recyc
         View view = inflater.inflate(layout, parent,false);
         RecyclerViewHolder viewHolder = new RecyclerViewHolder(view);
 
+//        for(int i=0; i<movieList.size();i++){
+//            Log.d(TAG, (movieList.get(i)).getPoster_path());
+//            Log.d(TAG, ""+(movieList.get(i)).getId());
+//        }
+
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
+        //String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
+
+        Log.d(TAG, "position is >>>>> "+position +" position movie list"+movieList.get(position) + "size array "+movieList.size());
+
+        int posLeft = position, posRight = position;
+        if(position == 0){
+            posLeft = position;
+            posRight = position+1;
+        }
+        else{
+            posLeft = posLeft * 2;
+            posRight = posLeft + 1;
+        }
+        String movieLeft = "http://image.tmdb.org/t/p/w185/"+(movieList.get(posLeft)).getPoster_path();
+        Log.d(TAG, "left is >>>>> "+movieLeft);
+
         Picasso.with(context)
-                .load(path.trim())
+                .load(movieLeft)
                 .into(holder.leftImage);
-       // holder.leftImage.setImageResource(R.drawable.image);
 
+//        if(position==0){position=;}
+        String movieRight = "http://image.tmdb.org/t/p/w185/"+(movieList.get(posRight)).getPoster_path();
 
         Picasso.with(context)
-                .load(path.trim())
+                .load(movieRight)
                 .into(holder.rightImage);
-      //  holder.rightImage.setImageResource(R.drawable.image);
-
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        return movieList.size()/2;
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
