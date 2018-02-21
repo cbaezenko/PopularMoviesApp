@@ -63,7 +63,5 @@ public class JsonUtilities {
              trailerList.add(results.optString(i));
          }
         return  new Movie(trailerList);
-        /*creo que esto esta mal, Necesitamos una List para el recycler view en detail trailers
-        * */
     }
 }

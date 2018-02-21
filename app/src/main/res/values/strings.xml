@@ -1,10 +1,21 @@
 <resources>
     <string name="app_name">PopularMoviesApp</string>
 
-    <string name="key_movies">KEY FOR MOVIES HERE</string>
+    <string name="key_movies">INSERT KEY MOVIE HERE</string>
 
     <string name="popularity">Popularity</string>
     <string name="top_rated">Top Rated</string>
+
+    <string name="movie_image">Movie Image</string>
+    <string name="trailer_movie">Trailer Movie</string>
+
+    <string name="show_youtube">Open in YoutubeApp</string>
+    <string name="show_inside">Open in Browser</string>
+
+    <string name="minutes">min</string>
+    <string name="vote_average_design">/10</string>
+
+    <string name="trailer_str">Trailer</string>
 
     <string name="show_by_popularity">Order By Popularity</string>
     <string name="show_by_top_rated">Order By Top Rated</string>

@@ -35,7 +35,8 @@
                 <TextView
                     android:gravity="center_vertical"
                     android:background="@color/colorPrimary"
-                    android:paddingLeft="20sp"
+                    android:paddingStart="20sp"
+                    android:paddingEnd="20sp"
                     android:id="@+id/tv_title"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"

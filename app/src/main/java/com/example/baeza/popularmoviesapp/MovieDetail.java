@@ -49,8 +49,8 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
 
         tvTitle.setText(titleMovie);
         tvOverview.setText(overview);
-        tvRunTime.setText(runtime+"min");
-        tvVoteAverage.setText(voteAverage+"/10");
+        tvRunTime.setText(runtime+getString(R.string.minutes));
+        tvVoteAverage.setText(voteAverage+getString(R.string.vote_average_design));
         tvReleaseDate.setText(getOnlyYear(release_date));
         Picasso.with(this).load(posterPath).into(iv_poster);
     }
@@ -90,7 +90,7 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.video_menu, menu);
         return true;
     }
 
@@ -110,12 +110,13 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
         @Override
         protected void onPostExecute(String moviesData){
             if(moviesData!=null && !moviesData.equals("")){
+            //add code here
             }
         }
     }
 
 
-    private void setForCollapsing(){
+//    private void setForCollapsing(){
         //        tv_title = findViewById(R.id.tv_title);
 //        mToolbar = findViewById(R.id.toolbar);
 //        setSupportActionBar(mToolbar);
@@ -125,7 +126,7 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
 //        CollapsingToolbarLayout collapsingToolbarLayout =findViewById(R.id.collapsing_toolbar);
 //        //collapsingToolbarLayout.setTitle("MovieDetail");
 //        tv_title.setText(titleMovie);
-    }
+//    }
 
     @Override
     public void onListItemClick(int clickedItemIndex) {

@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     private static final String INFO_TO_KEEP =  "info";
     public static final int POPULAR = 1, TOP_RATED = 2, DETAIL_MOVIE = 3;
 //    public String TAG = this.getClass().getSimpleName();
-    static ProgressBar progressBar;
+    ProgressBar progressBar;
 
     private Movie movieDetail;
 
@@ -112,10 +112,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
         @Override
         protected void onPreExecute(){super.onPreExecute();
 
-        if(mMovieList!=null || mMovieList.size()!=0){
-            mMovieList.clear();
+        if(mMovieList!=null) {
+            if (mMovieList.size() != 0) {
+                mMovieList.clear();
+            }
         }
-
         showProgressBar(true);}
 
         @Override

@@ -36,7 +36,7 @@ public class RecyclerAdapterDetailMovie extends RecyclerView.Adapter<RecyclerAda
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.tv_trailer.setText("Trailer "+position);
+        holder.tv_trailer.setText(context.getString(R.string.trailer_str)+position);
     }
 
     @Override
