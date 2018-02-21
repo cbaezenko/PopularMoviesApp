@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
     public static final int POPULAR = 1, TOP_RATED = 2, DETAIL_MOVIE = 3;
     public String TAG = this.getClass().getSimpleName();
+    static ProgressBar progressBar;
 
     private Movie movieDetail;
 
@@ -67,14 +68,22 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
         switch (item.getItemId()){
             case R.id.popularity:{
             Toast.makeText(MainActivity.this,
-                    "Popularity", Toast.LENGTH_SHORT )
+                    "Show by Popularity", Toast.LENGTH_SHORT )
                     .show();
-                    break;}
+                URL videoUrl = NetworkUtils.buildUrl(POPULAR, getString(R.string.key_movies));
+                new FetchMovies(MainActivity.POPULAR).execute(videoUrl);
+                    break;
+
+            }
             case R.id.top_rared:{
                 Toast.makeText(MainActivity.this,
-                        "TOP RATED", Toast.LENGTH_SHORT )
+                        "Show by TOP RATED", Toast.LENGTH_SHORT )
                         .show();
-                        break;}
+                URL videoUrl = NetworkUtils.buildUrl(TOP_RATED, getString(R.string.key_movies));
+                new FetchMovies(MainActivity.TOP_RATED).execute(videoUrl);
+                        break;
+
+            }
             default:{}
         }
         return super.onOptionsItemSelected(item);
@@ -89,10 +98,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
     public class FetchMovies extends AsyncTask<URL, Void, String>{
         int petition;
+
         FetchMovies(int petition){this.petition = petition;}
 
         @Override
-        protected void onPreExecute(){super.onPreExecute(); showProgressBar(true);}
+        protected void onPreExecute(){super.onPreExecute();
+
+        if(mMovieList!=null || mMovieList.size()!=0){
+            mMovieList.clear();
+        }
+
+        showProgressBar(true);}
 
         @Override
         protected String doInBackground(URL... urls) {
@@ -122,7 +138,8 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                         movieDetail.getPoster_path(),
                         movieDetail.getOverview(),
                         movieDetail.getRuntime(),
-                        movieDetail.getVote_average());
+                        movieDetail.getVote_average(),
+                        movieDetail.getRelease_date());
                 return;
             }
             if(moviesData != null && !moviesData.equals("")) {
@@ -139,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     }
 
     private void showProgressBar(boolean isShownProgressBar){
-        ProgressBar progressBar = findViewById(R.id.progressBar);
+        progressBar = findViewById(R.id.progressBar);
         if(isShownProgressBar){
             progressBar.setVisibility(View.VISIBLE);}
         else{
@@ -154,13 +171,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
             tv_error_msg.setVisibility(View.INVISIBLE);}
     }
 
-    private void startMovieDetailActivity(String title,String poster_path,String overview,int runtime, double vote_average){
+    private void startMovieDetailActivity(String title,String poster_path,String overview,int runtime, double vote_average, String release_date){
         Intent intent = new Intent(this, MovieDetail.class);
         intent.putExtra(MovieDetail.TITLE_KEY, title);
         intent.putExtra(MovieDetail.POSTER_PATH, poster_path);
         intent.putExtra(MovieDetail.OVERVIEW, overview);
         intent.putExtra(MovieDetail.RUNTIME, runtime);
         intent.putExtra(MovieDetail.VOTE_AVERAGE, vote_average);
+        intent.putExtra(MovieDetail.RELEASE_DATE, release_date);
         startActivity(intent);
     }
 }

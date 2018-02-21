@@ -27,11 +27,13 @@ public class JsonUtilities {
         int runtime = movie.optInt("runtime");
         Double vote_average = movie.optDouble("vote_average");
         String title = movie.getString("title");
+        String release_date = movie.getString("release_date");
         String poster_path = NetworkUtils.getUrlBaseForImageMovie() +
                 movie.optString("poster_path");
 
         return new Movie(vote_average,
                 title,
+                release_date,
                 poster_path,
                 overview,
                 runtime);

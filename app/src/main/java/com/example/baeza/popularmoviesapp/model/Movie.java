@@ -8,8 +8,7 @@ import java.util.List;
  */
 
 public class Movie {
-    private  String title, overview, poster_path;
-    private  Date release_date;
+    private  String title, overview, poster_path,release_date;
     private  int runtime, id;
     private  double vote_average;
 
@@ -25,6 +24,7 @@ public class Movie {
     //constructor for detail movie activity
     public Movie(double vote_average,
                  String title,
+                 String release_date,
                  String poster_path,
                  String overview,
                  int runtime){
@@ -36,10 +36,10 @@ public class Movie {
         this.runtime = runtime;
     }
 
+    public String getRelease_date(){return release_date;}
     public String getTitle() {return title;}
     public String getOverview() {return overview;}
     public String getPoster_path() {return poster_path;}
-    public Date getRelease_date() {return release_date;}
     public int getRuntime() {return runtime;}
     public int getId() {return id;}
     public double getVote_average() {return vote_average;}
