@@ -26,10 +26,10 @@
             android:layout_height="112dp"
             android:background="@color/my_dark_green"
             android:fontFamily="sans-serif"
+            android:textSize="22sp"
             android:gravity="center_vertical"
             android:paddingLeft="16dp"
             android:textColor="@android:color/white"
-            android:textSize="22sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +57,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:layout_marginTop="8dp"
                             android:layout_marginLeft="16dp"
                             android:orientation="vertical"
                             android:layout_weight="1"
@@ -64,22 +65,28 @@
                             android:layout_height="match_parent">
 
                             <TextView
+                                android:textSize="20sp"
+                                android:text="2018"
                                 android:id="@+id/year"
                                 style="@style/detail_movie_text"/>
 
                             <TextView
                                 android:textStyle="italic"
-                                android:textSize="16sp"
+                                android:textSize="18sp"
                                 android:layout_marginTop="8dp"
                                 android:id="@+id/runtime"
                                 style="@style/detail_movie_text"/>
 
                             <TextView
+                                android:textSize="12sp"
                                 android:layout_marginTop="8dp"
-                                android:id="@+id/rated"
+                                android:id="@+id/voteAverage"
                                 style="@style/detail_movie_text"/>
 
                             <Button
+                                android:textSize="12sp"
+                                android:fontFamily="sans-serif"
+                                android:background="@color/colorAccent"
                                 android:id="@+id/btn_mark_favorite"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -96,6 +103,7 @@
                 style="@style/detail_movie_text"/>
 
             <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_trailers"
                 style="@style/detail_movie">
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>

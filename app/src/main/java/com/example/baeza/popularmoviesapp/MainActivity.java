@@ -15,7 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.baeza.popularmoviesapp.model.Movie;
-import com.example.baeza.popularmoviesapp.model.RecyclerAdapter;
+import com.example.baeza.popularmoviesapp.model.RecyclerAdapterMainScreen;
 import com.example.baeza.popularmoviesapp.utilities.JsonUtilities;
 import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
 
@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements RecyclerAdapter.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements RecyclerAdapterMainScreen.ListItemClickListener {
 
     public static final int POPULAR = 1, TOP_RATED = 2, DETAIL_MOVIE = 3;
     public String TAG = this.getClass().getSimpleName();
@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
     private Movie movieDetail;
 
     RecyclerView mRecyclerView;
-    RecyclerAdapter mRecyclerAdapter;
+    RecyclerAdapterMainScreen mRecyclerAdapterMainScreen;
     private static List<Movie> mMovieList = new ArrayList<>();
     RecyclerView.LayoutManager recyclerViewLayoutManager;
 
@@ -55,11 +55,11 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapter.L
 
         //giving to the recycler view the grid appearance
         recyclerViewLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerAdapter = new RecyclerAdapter(MainActivity.this, MainActivity.this, mMovieList);
+        mRecyclerAdapterMainScreen = new RecyclerAdapterMainScreen(MainActivity.this, MainActivity.this, mMovieList);
         mRecyclerView.setLayoutManager(recyclerViewLayoutManager);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mRecyclerAdapter);
+        mRecyclerView.setAdapter(mRecyclerAdapterMainScreen);
     }
 
     @Override

@@ -17,13 +17,13 @@ import java.util.List;
  * Created by baeza on 19.02.2018.
  */
 
-public class RecyclerAdapter extends  RecyclerView.Adapter<RecyclerAdapter.RecyclerViewHolder>{
+public class RecyclerAdapterMainScreen extends  RecyclerView.Adapter<RecyclerAdapterMainScreen.RecyclerViewHolder>{
 
     final private ListItemClickListener mOnClickListener;
     Context context;
     List<Movie> movieList;
 
-    public RecyclerAdapter(Context context, ListItemClickListener listener, List<Movie> movieList){
+    public RecyclerAdapterMainScreen(Context context, ListItemClickListener listener, List<Movie> movieList){
         mOnClickListener = listener;
         this.context = context;
         this.movieList = movieList;
