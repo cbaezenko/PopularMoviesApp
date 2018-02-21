@@ -1,35 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
-    <android.support.design.widget.CoordinatorLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-        <android.support.design.widget.CollapsingToolbarLayout
-            app:contentScrim="@color/colorPrimary"
-            app:expandedTitleGravity="top"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <TextView
+            android:elevation="8dp"
+            android:id="@+id/tv_title"
+            android:layout_width="match_parent"
+            android:layout_height="112dp"
+            android:background="@color/my_dark_green"
+            android:fontFamily="sans-serif"
+            android:gravity="center_vertical"
+            android:paddingLeft="16dp"
+            android:textColor="@android:color/white"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+                    <LinearLayout
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal"
+                        android:weightSum="2"
+                        style="@style/detail_movie">
+
+                        <LinearLayout
+                            android:layout_marginLeft="8dp"
+                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent">
+
+                            <ImageView
+                                android:adjustViewBounds="true"
+                                android:id="@+id/iv_poster"
+                                android:layout_height="match_parent"
+                                android:layout_width="match_parent"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_marginLeft="16dp"
+                            android:orientation="vertical"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:id="@+id/year"
+                                style="@style/detail_movie_text"/>
+
+                            <TextView
+                                android:textStyle="italic"
+                                android:textSize="16sp"
+                                android:layout_marginTop="8dp"
+                                android:id="@+id/runtime"
+                                style="@style/detail_movie_text"/>
+
+                            <TextView
+                                android:layout_marginTop="8dp"
+                                android:id="@+id/rated"
+                                style="@style/detail_movie_text"/>
+
+                            <Button
+                                android:id="@+id/btn_mark_favorite"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="MARK AS\nFAVORITE"/>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
             <TextView
-                android:textSize="22sp"
-                app:layout_collapseParallaxMultiplier="0.5"
-                app:layout_collapseMode="parallax"
-                android:id="@+id/tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:padding="16dp"
+                android:id="@+id/overview"
+                style="@style/detail_movie_text"/>
 
-            <android.support.v7.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="100dp"
-                app:layout_collapseMode="pin">
-            </android.support.v7.widget.Toolbar>
-        </android.support.design.widget.CollapsingToolbarLayout>
-
-    </android.support.design.widget.CoordinatorLayout>
+            <android.support.v7.widget.RecyclerView
+                style="@style/detail_movie">
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
