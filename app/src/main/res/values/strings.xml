@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">PopularMoviesApp</string>
 
-    <string name="key_movies">KEY HERE FOR MOVIES API</string>
+    <string name="key_movies">KEY FOR MOVIES HERE</string>
 
     <string name="popularity">Popularity</string>
     <string name="top_rated">Top Rated</string>
 
+    <string name="show_by_popularity">Order By Popularity</string>
+    <string name="show_by_top_rated">Order By Top Rated</string>
+
+    <string name="mark_as_favorite">MARK AS\nFAVORITE</string>
     <string name="error_message">Failed to get results, please try again</string>
 </resources>

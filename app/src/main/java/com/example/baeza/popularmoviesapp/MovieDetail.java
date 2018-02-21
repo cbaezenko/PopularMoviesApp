@@ -127,10 +127,6 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
 //        tv_title.setText(titleMovie);
     }
 
-    private void askForTrailers() throws JSONException {
-        JsonUtilities.parseMovieTrailerJSON("string json");
-    }
-
     @Override
     public void onListItemClick(int clickedItemIndex) {
         Toast.makeText(MovieDetail.this, "item "+clickedItemIndex, Toast.LENGTH_SHORT).show();
