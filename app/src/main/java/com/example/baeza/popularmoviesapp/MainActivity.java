@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -176,13 +175,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     }
 
     private void startMovieDetailActivity(Movie movieDetail){
-        Intent intent = new Intent(this, MovieDetail.class);
-        intent.putExtra(MovieDetail.TITLE_KEY, movieDetail.getTitle());
-        intent.putExtra(MovieDetail.POSTER_PATH, movieDetail.getPoster_path());
-        intent.putExtra(MovieDetail.OVERVIEW, movieDetail.getOverview());
-        intent.putExtra(MovieDetail.RUNTIME, movieDetail.getRuntime());
-        intent.putExtra(MovieDetail.VOTE_AVERAGE, movieDetail.getVote_average());
-        intent.putExtra(MovieDetail.RELEASE_DATE, movieDetail.getRelease_date());
+        Intent intent = new Intent(this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetail.getTitle());
+        intent.putExtra(MovieDetailActivity.POSTER_PATH, movieDetail.getPoster_path());
+        intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetail.getOverview());
+        intent.putExtra(MovieDetailActivity.RUNTIME, movieDetail.getRuntime());
+        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, movieDetail.getVote_average());
+        intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetail.getRelease_date());
         startActivity(intent);
     }
 

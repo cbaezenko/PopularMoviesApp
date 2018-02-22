@@ -15,15 +15,13 @@ import com.example.baeza.popularmoviesapp.utilities.JsonUtilities;
 import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-
 import java.net.URL;
 
 /**
  * Created by baeza on 16.02.2018.
  */
 
-public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDetailMovie.ListItemClickListener {
+public class MovieDetailActivity extends AppCompatActivity implements RecyclerAdapterDetailMovie.ListItemClickListener {
 
     public final static String TITLE_KEY = "title_key";
     public final static String POSTER_PATH = "poster_path_key";
@@ -63,8 +61,8 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
     private void populateUIwithRecyclerView(){
         mRecyclerView = findViewById(R.id.rv_trailers);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieDetail.this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerAdapterDetailMovie = new RecyclerAdapterDetailMovie(MovieDetail.this, this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerAdapterDetailMovie = new RecyclerAdapterDetailMovie(MovieDetailActivity.this, this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(mRecyclerAdapterDetailMovie);
@@ -124,12 +122,12 @@ public class MovieDetail extends AppCompatActivity implements RecyclerAdapterDet
 //        getSupportActionBar().setHomeButtonEnabled(true);
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        CollapsingToolbarLayout collapsingToolbarLayout =findViewById(R.id.collapsing_toolbar);
-//        //collapsingToolbarLayout.setTitle("MovieDetail");
+//        //collapsingToolbarLayout.setTitle("MovieDetailActivity");
 //        tv_title.setText(titleMovie);
 //    }
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-        Toast.makeText(MovieDetail.this, "item "+clickedItemIndex, Toast.LENGTH_SHORT).show();
+        Toast.makeText(MovieDetailActivity.this, "item "+clickedItemIndex, Toast.LENGTH_SHORT).show();
     }
 }
