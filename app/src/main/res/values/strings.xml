@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PopularMoviesApp</string>
 
-    <string name="key_movies">INSERT KEY MOVIE HERE</string>
+    <string name="key_movies">KEY HERE FOR MOVIES</string>
 
     <string name="popularity">Popularity</string>
     <string name="top_rated">Top Rated</string>

@@ -143,12 +143,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
         protected void onPostExecute(String moviesData){
             showProgressBar(false);
             if(petition == MainActivity.DETAIL_MOVIE && moviesData != null && !moviesData.equals("")){
-                startMovieDetailActivity(movieDetail.getTitle(),
-                        movieDetail.getPoster_path(),
-                        movieDetail.getOverview(),
-                        movieDetail.getRuntime(),
-                        movieDetail.getVote_average(),
-                        movieDetail.getRelease_date());
+                startMovieDetailActivity(movieDetail);
                 return;
             }
             if(moviesData != null && !moviesData.equals("")) {
@@ -180,14 +175,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
             tv_error_msg.setVisibility(View.INVISIBLE);}
     }
 
-    private void startMovieDetailActivity(String title,String poster_path,String overview,int runtime, double vote_average, String release_date){
+    private void startMovieDetailActivity(Movie movieDetail){
         Intent intent = new Intent(this, MovieDetail.class);
-        intent.putExtra(MovieDetail.TITLE_KEY, title);
-        intent.putExtra(MovieDetail.POSTER_PATH, poster_path);
-        intent.putExtra(MovieDetail.OVERVIEW, overview);
-        intent.putExtra(MovieDetail.RUNTIME, runtime);
-        intent.putExtra(MovieDetail.VOTE_AVERAGE, vote_average);
-        intent.putExtra(MovieDetail.RELEASE_DATE, release_date);
+        intent.putExtra(MovieDetail.TITLE_KEY, movieDetail.getTitle());
+        intent.putExtra(MovieDetail.POSTER_PATH, movieDetail.getPoster_path());
+        intent.putExtra(MovieDetail.OVERVIEW, movieDetail.getOverview());
+        intent.putExtra(MovieDetail.RUNTIME, movieDetail.getRuntime());
+        intent.putExtra(MovieDetail.VOTE_AVERAGE, movieDetail.getVote_average());
+        intent.putExtra(MovieDetail.RELEASE_DATE, movieDetail.getRelease_date());
         startActivity(intent);
     }
 
