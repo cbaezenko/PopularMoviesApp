@@ -13,7 +13,11 @@ public class ApiUtils {
 
     private static final String BASE_URL_IMAGE = "http://image.tmdb.org/t/p/";
 
-    private static ApiService getApiServiceMovieList(){
+    public static ApiService getApiServiceMovieList(){
+        return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
+    }
+
+    public static ApiService getApiServiceMovieDetail(){
         return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
     }
 

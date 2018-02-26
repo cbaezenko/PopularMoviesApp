@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.movieList.MovieRequest;
 import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
@@ -21,13 +22,25 @@ public class RecyclerAdapterMainScreen extends  RecyclerView.Adapter<RecyclerAda
 
     final private ListItemClickListener mOnClickListener;
     Context context;
-    List<Movie> movieList;
+//    List<Movie> movieList;
+//    List<List> movieList;
+//    java.util.List<List> movieList;
+    MovieRequest mMovieRequest;
 
-    public RecyclerAdapterMainScreen(Context context, ListItemClickListener listener, List<Movie> movieList){
+
+//    public RecyclerAdapterMainScreen(Context context, ListItemClickListener listener, List<Movie> movieList){
+//        mOnClickListener = listener;
+//        this.context = context;
+//        this.movieList = movieList;
+//    }
+
+    public RecyclerAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest){
         mOnClickListener = listener;
         this.context = context;
-        this.movieList = movieList;
+//        this.movieList = movieList;
+    mMovieRequest = movieRequest;
     }
+
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,7 +56,10 @@ public class RecyclerAdapterMainScreen extends  RecyclerView.Adapter<RecyclerAda
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         //String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-        String moviePath = NetworkUtils.getUrlBaseForImageMovie()+(movieList.get(position)).getPoster_path();
+        String moviePath = NetworkUtils.getUrlBaseForImageMovie()+(
+                mMovieRequest.getResults().get(position).getPosterPath());//).getPoster_path();
+
+
         Picasso.with(context)
                 .load(moviePath)
                 .into(holder.imageMovie);
@@ -51,7 +67,7 @@ public class RecyclerAdapterMainScreen extends  RecyclerView.Adapter<RecyclerAda
 
     @Override
     public int getItemCount() {
-        return movieList.size();
+        return mMovieRequest.getResults().size();
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
