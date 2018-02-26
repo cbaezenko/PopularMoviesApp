@@ -102,4 +102,7 @@ public final class NetworkUtils {
         }
     }
 
+    public static String getApiKeyFormat() {
+        return API_KEY_FORMAT;
+    }
 }
