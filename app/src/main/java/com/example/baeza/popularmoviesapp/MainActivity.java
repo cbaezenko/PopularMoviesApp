@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     private final static String TAG = "MainActivity";
 
     private static final String INFO_TO_KEEP =  "info";
-    public static final int POPULAR = 1, TOP_RATED = 2, DETAIL_MOVIE = 3;
+    public static final int POPULAR = 1, TOP_RATED = 2;
     ProgressBar progressBar;
 
     private MovieRequest mMovieRequest;
@@ -45,13 +46,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
         if(savedInstanceState == null || !savedInstanceState.containsKey(INFO_TO_KEEP)){
             try {getRetrofitAnswer(POPULAR);}
-            catch (IOException e) {e.printStackTrace();}
-        }
+            catch (IOException e) {e.printStackTrace();}}
         else {
             mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
-            populateUIwithRecyclerViewRetro(mMovieRequest);
-        }
-
+            populateUIwithRecyclerViewRetro(mMovieRequest);}
     }
 
     @Override
@@ -84,7 +82,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                 try {getRetrofitAnswer(POPULAR);}
                 catch (IOException e) {e.printStackTrace();}
                     break;
-
             }
             case R.id.top_rared:{
                 try {getRetrofitAnswer(TOP_RATED);}
@@ -101,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-
+        showProgressBar(true);
         ApiUtils.getApiServiceMovieDetail().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
                 getString(R.string.key_movies))
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -111,12 +108,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
                     @Override
                     public void onError(Throwable e) {
-
+                        showProgressBar(false);
+                        showErrorMsg(true);
                     }
 
                     @Override
                     public void onNext(MovieDetailRequest movieDetailRequest) {
 
+                        showProgressBar(false);
                         mMovieDetailRequest = movieDetailRequest;
                     Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
                     intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie()+mMovieDetailRequest.getPosterPath());
@@ -126,8 +125,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                     intent.putExtra(MovieDetailActivity.RELEASE_DATE, mMovieDetailRequest.getReleaseDate());
                     intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
                     startActivity(intent);
-                    }
-                });
+                    }});
 
     }
 
@@ -174,8 +172,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest =movieRequest;
                             }});
-                break;
-            }
+                break;}
 
             case TOP_RATED: {
                 showProgressBar(true);
@@ -195,13 +192,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest = movieRequest;
                             }});
-                break;
-            }
+                break;}
 
             default:{
                 //do nothing
             }
-        }
-    }
-
+        }}
 }
