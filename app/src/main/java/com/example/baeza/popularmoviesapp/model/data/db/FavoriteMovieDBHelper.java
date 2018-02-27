@@ -1,4 +1,4 @@
-package com.example.baeza.popularmoviesapp.data;
+package com.example.baeza.popularmoviesapp.model.data.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -20,11 +20,11 @@ public class FavoriteMovieDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            final String SQL_CREATE_FAVORITE_MOVIE_TABLE = "CREATE TABLE"+
-                    FavoriteMovieContract.FavoriteMovie.TABLE_NAME + "(" +
-                    FavoriteMovieContract.FavoriteMovie._ID +"INTEGER PRIMARY KEY AUTOINCREMENT,"+
-                    FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID + "INTEGER NOT NULL, "+
-                    FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID + "TEXT NOT NULL"+
+            final String SQL_CREATE_FAVORITE_MOVIE_TABLE = "CREATE TABLE "+
+                    FavoriteMovieContract.FavoriteMovie.TABLE_NAME + " (" +
+                    FavoriteMovieContract.FavoriteMovie._ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                    FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID + " INTEGER NOT NULL, "+
+                    FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID + " TEXT NOT NULL"+
                     ");";
 
             //execute the query to create the database

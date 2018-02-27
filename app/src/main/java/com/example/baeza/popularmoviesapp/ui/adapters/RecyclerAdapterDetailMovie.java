@@ -1,4 +1,4 @@
-package com.example.baeza.popularmoviesapp.model.adapters;
+package com.example.baeza.popularmoviesapp.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;

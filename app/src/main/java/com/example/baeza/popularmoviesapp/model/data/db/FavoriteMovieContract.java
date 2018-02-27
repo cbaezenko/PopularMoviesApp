@@ -1,4 +1,4 @@
-package com.example.baeza.popularmoviesapp.data;
+package com.example.baeza.popularmoviesapp.model.data.db;
 
 import android.provider.BaseColumns;
 

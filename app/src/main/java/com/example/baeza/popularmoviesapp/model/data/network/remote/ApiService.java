@@ -1,7 +1,7 @@
-package com.example.baeza.popularmoviesapp.remote;
+package com.example.baeza.popularmoviesapp.model.data.network.remote;
 
-import com.example.baeza.popularmoviesapp.model.movieDetail.MovieDetailRequest;
-import com.example.baeza.popularmoviesapp.model.movieList.MovieRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail.MovieDetailRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

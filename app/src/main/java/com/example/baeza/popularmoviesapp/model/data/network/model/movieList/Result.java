@@ -1,5 +1,5 @@
 
-package com.example.baeza.popularmoviesapp.model.movieList;
+package com.example.baeza.popularmoviesapp.model.data.network.model.movieList;
 
 import java.util.List;
 import com.google.gson.annotations.Expose;

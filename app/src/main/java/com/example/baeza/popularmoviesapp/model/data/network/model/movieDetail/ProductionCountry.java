@@ -1,5 +1,5 @@
 
-package com.example.baeza.popularmoviesapp.model.movieDetail;
+package com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

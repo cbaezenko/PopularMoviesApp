@@ -1,11 +1,13 @@
-package com.example.baeza.popularmoviesapp;
+package com.example.baeza.popularmoviesapp.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,10 +15,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baeza.popularmoviesapp.model.adapters.RecyclerAdapterMainScreen;
-import com.example.baeza.popularmoviesapp.model.movieDetail.MovieDetailRequest;
-import com.example.baeza.popularmoviesapp.model.movieList.MovieRequest;
-import com.example.baeza.popularmoviesapp.utilities.ApiUtils;
+import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
+import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
+import com.example.baeza.popularmoviesapp.ui.adapters.RecyclerAdapterMainScreen;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail.MovieDetailRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 
 import java.io.IOException;
 
@@ -31,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     private static final String INFO_TO_KEEP =  "info";
     public static final int POPULAR = 1, TOP_RATED = 2;
     ProgressBar progressBar;
+    private SQLiteDatabase mDb;
 
     private MovieRequest mMovieRequest;
     private MovieDetailRequest mMovieDetailRequest;
@@ -43,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
 
         if(savedInstanceState == null || !savedInstanceState.containsKey(INFO_TO_KEEP)){
             try {getRetrofitAnswer(POPULAR);}
@@ -124,6 +133,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                     intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, mMovieDetailRequest.getVoteAverage());
                     intent.putExtra(MovieDetailActivity.RELEASE_DATE, mMovieDetailRequest.getReleaseDate());
                     intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
+                    intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
                     startActivity(intent);
                     }});
 
@@ -198,4 +208,28 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                 //do nothing
             }
         }}
+
+        private Cursor getAllMovies(){
+            return mDb.query(
+                    FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null);
+        }
+
+        private void addToFavoriteMovie(View view){
+           // addNewFavoriteMovie()
+        }
+
+        private long addNewFavoriteMovie(int id, String poster_path){
+            ContentValues cv = new ContentValues();
+            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
+            return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
+        }
+
+
 }

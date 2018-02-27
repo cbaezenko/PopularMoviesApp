@@ -1,4 +1,4 @@
-package com.example.baeza.popularmoviesapp.remote;
+package com.example.baeza.popularmoviesapp.model.data.network.remote;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

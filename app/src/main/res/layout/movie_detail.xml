@@ -85,6 +85,7 @@
                                 style="@style/detail_movie_text"/>
 
                             <Button
+                                android:onClick="addToFavoriteMovie"
                                 android:textSize="12sp"
                                 android:fontFamily="sans-serif"
                                 android:background="@color/colorAccent"

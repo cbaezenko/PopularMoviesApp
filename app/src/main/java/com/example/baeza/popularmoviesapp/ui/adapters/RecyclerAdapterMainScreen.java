@@ -1,4 +1,4 @@
-package com.example.baeza.popularmoviesapp.model.adapters;
+package com.example.baeza.popularmoviesapp.ui.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -8,8 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
-import com.example.baeza.popularmoviesapp.model.movieList.MovieRequest;
-import com.example.baeza.popularmoviesapp.utilities.ApiUtils;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.squareup.picasso.Picasso;
 
 /**

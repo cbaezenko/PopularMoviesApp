@@ -1,16 +1,23 @@
-package com.example.baeza.popularmoviesapp;
+package com.example.baeza.popularmoviesapp.ui;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baeza.popularmoviesapp.model.adapters.RecyclerAdapterDetailMovie;
+import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
+import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
+import com.example.baeza.popularmoviesapp.ui.adapters.RecyclerAdapterDetailMovie;
 import com.squareup.picasso.Picasso;
 
 /**
@@ -25,19 +32,28 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
     public final static String RUNTIME = "runtime_key";
     public final static String VOTE_AVERAGE = "vote_average";
     public final static String RELEASE_DATE = "release_date";
+    public final static String ID_MOVIE = "id";
 
     protected static final String TAG = "MovieDetailActivity";
+
+    private SQLiteDatabase mDb;
 
     private RecyclerView mRecyclerView;
     private RecyclerAdapterDetailMovie mRecyclerAdapterDetailMovie;
     private ImageView iv_poster;
     private TextView tvTitle, tvOverview, tvRunTime, tvVoteAverage, tvReleaseDate;
     private String titleMovie, posterPath, overview, runtime, voteAverage, release_date;
+    private int id;
+    Button btnFavorite;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.movie_detail);
+
+        //with bd SQLite
+        FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
 
         getExtrasFromIntent();
         initUIItems();
@@ -74,6 +90,7 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
         voteAverage = Double.toString(getIntent().getDoubleExtra(VOTE_AVERAGE, 0.0));
         runtime = Integer.toString(getIntent().getIntExtra(RUNTIME, 0));
         release_date = getIntent().getStringExtra(RELEASE_DATE);
+        id = getIntent().getIntExtra(ID_MOVIE,1);
     }
 
     private void initUIItems(){
@@ -83,6 +100,8 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
         tvRunTime = findViewById(R.id.runtime);
         tvVoteAverage = findViewById(R.id.voteAverage);
         tvReleaseDate = findViewById(R.id.year);
+
+        btnFavorite = findViewById(R.id.btn_mark_favorite);
     }
 
     @Override
@@ -95,4 +114,19 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
     public void onListItemClick(int clickedItemIndex) {
         Toast.makeText(MovieDetailActivity.this, "item "+clickedItemIndex, Toast.LENGTH_SHORT).show();
     }
+
+
+    //With SQLite
+    public void addToFavoriteMovie(View view){
+        Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
+         addNewFavoriteMovie(id, posterPath);
+    }
+
+    private long addNewFavoriteMovie(int id, String poster_path){
+        ContentValues cv = new ContentValues();
+        cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+        cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
+        return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
+    }
+
 }

@@ -1,7 +1,7 @@
-package com.example.baeza.popularmoviesapp.utilities;
+package com.example.baeza.popularmoviesapp.model.data.network.utilities;
 
-import com.example.baeza.popularmoviesapp.remote.ApiService;
-import com.example.baeza.popularmoviesapp.remote.RetrofitClient;
+import com.example.baeza.popularmoviesapp.model.data.network.remote.ApiService;
+import com.example.baeza.popularmoviesapp.model.data.network.remote.RetrofitClient;
 
 /**
  * Created by baeza on 26.02.2018.
