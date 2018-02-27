@@ -1,13 +1,10 @@
 package com.example.baeza.popularmoviesapp;
 
 import android.content.Intent;
-import android.os.AsyncTask;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -15,18 +12,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.baeza.popularmoviesapp.model.Movie;
-import com.example.baeza.popularmoviesapp.model.RecyclerAdapterMainScreen;
+import com.example.baeza.popularmoviesapp.model.adapters.RecyclerAdapterMainScreen;
 import com.example.baeza.popularmoviesapp.model.movieDetail.MovieDetailRequest;
 import com.example.baeza.popularmoviesapp.model.movieList.MovieRequest;
 import com.example.baeza.popularmoviesapp.utilities.ApiUtils;
-import com.example.baeza.popularmoviesapp.utilities.JsonUtilities;
-import com.example.baeza.popularmoviesapp.utilities.NetworkUtils;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -38,15 +29,13 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
     private static final String INFO_TO_KEEP =  "info";
     public static final int POPULAR = 1, TOP_RATED = 2, DETAIL_MOVIE = 3;
-//    public String TAG = this.getClass().getSimpleName();
     ProgressBar progressBar;
 
-    private Movie movieDetail;
     private MovieRequest mMovieRequest;
+    private MovieDetailRequest mMovieDetailRequest;
 
     RecyclerView mRecyclerView;
     RecyclerAdapterMainScreen mRecyclerAdapterMainScreen;
-    private static List<Movie> mMovieList = new ArrayList<>();
     RecyclerView.LayoutManager recyclerViewLayoutManager;
 
     @Override
@@ -54,22 +43,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        try { getRetrofitAnswer(TOP_RATED);}
-//        catch (IOException e) {e.printStackTrace();Log.d(TAG, "EXCEPTION HERE");}
-
-//        if(savedInstanceState ==null || !savedInstanceState.containsKey(INFO_TO_KEEP)){
-//        URL videoUrl = NetworkUtils.buildUrl(POPULAR, getString(R.string.key_movies));
-//       // new FetchMovies(MainActivity.POPULAR).execute(videoUrl);
-//        }
-//        else {
-//            mMovieList = savedInstanceState.getParcelableArrayList(INFO_TO_KEEP);
-//            populateUIwithRecyclerView();
-//        }
-
-
         if(savedInstanceState == null || !savedInstanceState.containsKey(INFO_TO_KEEP)){
-        //URL videoUrl = NetworkUtils.buildUrl(POPULAR, getString(R.string.key_movies));
-       // new FetchMovies(MainActivity.POPULAR).execute(videoUrl);
             try {getRetrofitAnswer(POPULAR);}
             catch (IOException e) {e.printStackTrace();}
         }
@@ -86,17 +60,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
         return true;
     }
 
-//    private void populateUIwithRecyclerView(){
-//        mRecyclerView = findViewById(R.id.recyclerView_movies);
-//
-//        //giving to the recycler view the grid appearance
-//        recyclerViewLayoutManager = new GridLayoutManager(this, 2);
-//        mRecyclerAdapterMainScreen = new RecyclerAdapterMainScreen(MainActivity.this, MainActivity.this, mMovieList);
-//        mRecyclerView.setLayoutManager(recyclerViewLayoutManager);
-//
-//        mRecyclerView.setHasFixedSize(true);
-//        mRecyclerView.setAdapter(mRecyclerAdapterMainScreen);
-//    }
 
     private void populateUIwithRecyclerViewRetro(MovieRequest movieRequest){
         if(mRecyclerView!=null){mRecyclerView.removeAllViews();}
@@ -120,8 +83,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                     .show();
                 try {getRetrofitAnswer(POPULAR);}
                 catch (IOException e) {e.printStackTrace();}
-//                URL videoUrl = NetworkUtils.buildUrl(POPULAR, getString(R.string.key_movies));
-               // new FetchMovies(MainActivity.POPULAR).execute(videoUrl);
                     break;
 
             }
@@ -131,10 +92,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                 Toast.makeText(MainActivity.this,
                         getString(R.string.show_by_top_rated), Toast.LENGTH_SHORT )
                         .show();
-//                URL videoUrl = NetworkUtils.buildUrl(TOP_RATED, getString(R.string.key_movies));
-              //  new FetchMovies(MainActivity.TOP_RATED).execute(videoUrl);
                         break;
-
             }
             default:{}
         }
@@ -143,91 +101,36 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
     @Override
     public void onListItemClick(int clickedItemIndex) {
-//        Toast.makeText(this, "Pressed "+clickedItemIndex+" id is: "+(mMovieList.get(clickedItemIndex)).getId(), Toast.LENGTH_SHORT).show();
-//        URL movieDetailURL = NetworkUtils.buildUrl(DETAIL_MOVIE, getString(R.string.key_movies),(mMovieList.get(clickedItemIndex)).getId());
-       // new FetchMovies(DETAIL_MOVIE).execute(movieDetailURL);
 
-//        try {getRetrofitAnswer(DETAIL_MOVIE);
-//        }
-//        catch (IOException e) {e.printStackTrace();}
+        ApiUtils.getApiServiceMovieDetail().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
+                getString(R.string.key_movies))
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MovieDetailRequest>() {
+                    @Override
+                    public void onCompleted() {}
 
-//        ApiUtils.getApiServiceMovieDetail().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
-//                getString(R.string.key_movies))
-//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<MovieDetailRequest>() {
-//                    @Override
-//                    public void onCompleted() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(MovieDetailRequest movieDetailRequest) {
-//                    Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-//                    startActivity(intent);
-//                    }
-//                });
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onNext(MovieDetailRequest movieDetailRequest) {
+
+                        mMovieDetailRequest = movieDetailRequest;
+                    Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+                    intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie()+mMovieDetailRequest.getPosterPath());
+                    intent.putExtra(MovieDetailActivity.OVERVIEW, mMovieDetailRequest.getOverview());
+                    intent.putExtra(MovieDetailActivity.RUNTIME, mMovieDetailRequest.getRuntime());
+                    intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, mMovieDetailRequest.getVoteAverage());
+                    intent.putExtra(MovieDetailActivity.RELEASE_DATE, mMovieDetailRequest.getReleaseDate());
+                    intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
+                    startActivity(intent);
+                    }
+                });
 
     }
 
-//    public class FetchMovies extends AsyncTask<URL, Void, String>{
-//        int petition;
-//
-//        FetchMovies(int petition){this.petition = petition;}
-//
-//        @Override
-//        protected void onPreExecute(){super.onPreExecute();
-//
-//        if(mMovieList!=null) {
-//            if (mMovieList.size() != 0) {
-//                mMovieList.clear();
-//            }
-//        }
-//        showProgressBar(true);}
-//
-//        @Override
-//        protected String doInBackground(URL... urls) {
-//            URL url = urls[0];
-//            String jsonMoviesResponse = null;
-//            try{
-//                jsonMoviesResponse = NetworkUtils.getResponseFromHttpUrl(url);
-//
-//                    if(petition != MainActivity.DETAIL_MOVIE){
-//                    populateMovieList(JsonUtilities.parseMoviesListJSON(jsonMoviesResponse));}
-//
-//                    else {
-//                        movieDetail = JsonUtilities.parseDetailMovieJSON(jsonMoviesResponse);
-//                    }
-//                return jsonMoviesResponse;
-//            }
-//            catch (Exception e){
-//                e.printStackTrace();
-//                return  null;
-//            }
-//        }
-//        @Override
-//        protected void onPostExecute(String moviesData){
-//            showProgressBar(false);
-//            if(petition == MainActivity.DETAIL_MOVIE && moviesData != null && !moviesData.equals("")){
-//                startMovieDetailActivity(movieDetail);
-//                return;
-//            }
-//            if(moviesData != null && !moviesData.equals("")) {
-////                Log.d(TAG, "movies data " + moviesData);
-//                populateUIwithRecyclerView();
-//            } else {
-//                showErrorMsg(true);
-//            }
-//        }
-//    }
-//    private void populateMovieList( List<Movie> movieList){
-//        if(mMovieList.size() != 0){ mMovieList.clear(); }
-//        else { mMovieList.addAll(movieList); }
-//    }
 
     private void showProgressBar(boolean isShownProgressBar){
         progressBar = findViewById(R.id.progressBar);
@@ -244,34 +147,6 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
         else{
             tv_error_msg.setVisibility(View.INVISIBLE);}
     }
-
-//    private void startMovieDetailActivity(Movie movieDetail){
-//        Intent intent = new Intent(this, MovieDetailActivity.class);
-//        intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetail.getTitle());
-//        intent.putExtra(MovieDetailActivity.POSTER_PATH, movieDetail.getPoster_path());
-//        intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetail.getOverview());
-//        intent.putExtra(MovieDetailActivity.RUNTIME, movieDetail.getRuntime());
-//        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, movieDetail.getVote_average());
-//        intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetail.getRelease_date());
-//        startActivity(intent);
-//    }
-
-//    private void startMovieDetailActivity(MovieRequest movieDetail){
-//        Intent intent = new Intent(this, MovieDetailActivity.class);
-//        intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetail.getTitle());
-//        intent.putExtra(MovieDetailActivity.POSTER_PATH, movieDetail.getPoster_path());
-//        intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetail.getOverview());
-//        intent.putExtra(MovieDetailActivity.RUNTIME, movieDetail.getRuntime());
-//        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, movieDetail.getVote_average());
-//        intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetail.getRelease_date());
-//        startActivity(intent);
-//    }
-
-//    @Override
-//    protected void onSaveInstanceState(Bundle outState){
-//        outState.putParcelableArrayList(INFO_TO_KEEP, (ArrayList<? extends Parcelable>) mMovieList);
-//        super.onSaveInstanceState(outState);
-//    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState){
@@ -298,8 +173,7 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                                 showProgressBar(false);
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest =movieRequest;
-                            }
-                        });
+                            }});
                 break;
             }
 
@@ -320,15 +194,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                                 showProgressBar(false);
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest = movieRequest;
-                            }
-                        });
+                            }});
                 break;
             }
-//            case DETAIL_MOVIE:{
-//                showProgressBar(true);
-//                ApiUtils.getApiServiceMovieDetail().getMovieDetail()
-//                break;
-//            }
+
             default:{
                 //do nothing
             }

@@ -8,10 +8,11 @@ import com.example.baeza.popularmoviesapp.remote.RetrofitClient;
  */
 
 public class ApiUtils {
-    private static final String BASE_URL_MOVIE =
-            "https://api.themoviedb.org/3/movie/";
 
-    private static final String BASE_URL_IMAGE = "http://image.tmdb.org/t/p/";
+    private static final String BASE_URL_MOVIE = "https://api.themoviedb.org/3/movie/";
+    private static final String IMAGE_MOVIE_BASE_URL = "http://image.tmdb.org/t/p/";
+    private static final String RECOMMENDED_SIZE_MOBILE = "w185/";
+    private final static String URL_BASE_FOR_IMAGE_MOVIE = IMAGE_MOVIE_BASE_URL + RECOMMENDED_SIZE_MOBILE;
 
     public static ApiService getApiServiceMovieList(){
         return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
@@ -21,7 +22,5 @@ public class ApiUtils {
         return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
     }
 
-//    private static ApiService getApiServiceImage(){
-//        return RetrofitClient.getClient(BASE_URL_IMAGE).create(ApiService.class);
-//    }
+    public static String getUrlBaseForImageMovie() {return URL_BASE_FOR_IMAGE_MOVIE;}
 }
