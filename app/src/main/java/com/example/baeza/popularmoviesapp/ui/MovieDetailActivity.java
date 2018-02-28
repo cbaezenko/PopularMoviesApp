@@ -1,6 +1,7 @@
 package com.example.baeza.popularmoviesapp.ui;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -118,8 +119,16 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
 
     //With SQLite
     public void addToFavoriteMovie(View view){
+        addNewFavoriteMovie(id, posterPath);
+
         Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
-         addNewFavoriteMovie(id, posterPath);
+        Cursor cursor = getAllMovies();
+        cursor.moveToFirst();
+        String showPoster = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID));
+        int showId = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID));
+        Log.d(TAG, "count from database "+cursor.getCount()+" from Database: poster: "+showPoster+"\n"
+        +" show id: "+showId);
+
     }
 
     private long addNewFavoriteMovie(int id, String poster_path){
@@ -129,4 +138,14 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
         return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
     }
 
+    private Cursor getAllMovies(){
+        return mDb.query(
+                FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
+    }
 }
