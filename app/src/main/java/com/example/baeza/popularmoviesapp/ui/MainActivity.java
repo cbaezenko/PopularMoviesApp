@@ -1,5 +1,6 @@
 package com.example.baeza.popularmoviesapp.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -33,7 +34,6 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity implements RVAdapterMainScreen.ListItemClickListener, RVAdapterMainScreenDB.ListItemClickListener {
 
     private final static String TAG = "MainActivity";
-
     private static final String INFO_TO_KEEP =  "info";
     public static final int POPULAR = 1, TOP_RATED = 2;
     ProgressBar progressBar;
@@ -44,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     RecyclerView mRecyclerView;
     RVAdapterMainScreen mRVAdapterMainScreen;
-
     RVAdapterMainScreenDB mRVAdapterMainScreenDB;
 
     RecyclerView.LayoutManager recyclerViewLayoutManager;
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
 
     private void populateUIwithRecyclerViewRetro(MovieRequest movieRequest){
         if(mRecyclerView!=null){mRecyclerView.removeAllViews();}
@@ -102,9 +100,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     public boolean onOptionsItemSelected(MenuItem item){
         switch (item.getItemId()){
             case R.id.popularity:{
-            Toast.makeText(MainActivity.this,
-                    getString(R.string.show_by_popularity), Toast.LENGTH_SHORT )
-                    .show();
+                showToast(getString(R.string.show_by_popularity), this);
                 try {getRetrofitAnswer(POPULAR);}
                 catch (IOException e) {e.printStackTrace();}
                     break;
@@ -112,9 +108,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             case R.id.top_rared:{
                 try {getRetrofitAnswer(TOP_RATED);}
                 catch (IOException e) {e.printStackTrace();}
-                Toast.makeText(MainActivity.this,
-                        getString(R.string.show_by_top_rated), Toast.LENGTH_SHORT )
-                        .show();
+                        showToast(getString(R.string.show_by_top_rated), this);
                         break;
             }
             case R.id.favorites:{
@@ -164,9 +158,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
                     startActivity(intent);
                     }});
-
     }
-
 
     private void showProgressBar(boolean isShownProgressBar){
         progressBar = findViewById(R.id.progressBar);
@@ -247,6 +239,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     null,
                     null);
         }
+
+        private void showToast(String text, Context context){Toast.makeText(context, text, Toast.LENGTH_SHORT).show();}
 
 //        private void addToFavoriteMovie(View view){
 //           // addNewFavoriteMovie()

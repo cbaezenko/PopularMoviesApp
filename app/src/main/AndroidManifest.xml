@@ -20,6 +20,10 @@
         </activity>
         <activity android:name=".ui.MovieDetailActivity"
                   android:parentActivityName=".ui.MainActivity"></activity>
+        <provider
+            android:exported="false"
+            android:authorities="com.example.baeza.popularmoviesapp"
+            android:name=".model.data.contentprovider.MovieContentProvider"/>
     </application>
 
 </manifest>

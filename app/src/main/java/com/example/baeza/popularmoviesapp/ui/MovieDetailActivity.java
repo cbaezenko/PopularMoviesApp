@@ -53,8 +53,8 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
         setContentView(R.layout.movie_detail);
 
         //with bd SQLite
-        FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
-        mDb = dbHelper.getWritableDatabase();
+//        FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
+//        mDb = dbHelper.getWritableDatabase();
 
         getExtrasFromIntent();
         initUIItems();
@@ -119,8 +119,8 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 
     //With SQLite
     public void addToFavoriteMovie(View view){
-        addNewFavoriteMovie(id, posterPath);
-//
+        addNewFavoriteMovie(id, posterPath, titleMovie);
+
 //        Cursor cursor = getAllMovies();
 //        cursor.moveToFirst();
 //        String showPoster = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID));
@@ -130,11 +130,12 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 //        cursor.close();
     }
 
-    private void addNewFavoriteMovie(int id, String poster_path){
+    private void addNewFavoriteMovie(int id, String poster_path, String titleMovie){
         try{
             ContentValues cv = new ContentValues();
             cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
-            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
+            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, poster_path);
+            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
             mDb.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
             Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
 
@@ -154,4 +155,18 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
                 null,
                 null);
     }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        if(mDb!=null){mDb.close();}
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+        FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
+        mDb = dbHelper.getWritableDatabase();
+    }
+
 }

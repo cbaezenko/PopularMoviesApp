@@ -24,7 +24,8 @@ public class FavoriteMovieDBHelper extends SQLiteOpenHelper {
                     FavoriteMovieContract.FavoriteMovie.TABLE_NAME + " (" +
                     FavoriteMovieContract.FavoriteMovie._ID +" INTEGER PRIMARY KEY AUTOINCREMENT,"+
                     FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID + " INTEGER UNIQUE NOT NULL, "+
-                    FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID + " TEXT NOT NULL"+
+                    FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID + " TEXT NOT NULL, "+
+                    FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE + " TEXT NOT NULL"+
                     ");";
 
             //execute the query to create the database
