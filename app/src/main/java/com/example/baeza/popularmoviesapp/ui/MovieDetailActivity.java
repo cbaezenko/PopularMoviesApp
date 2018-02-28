@@ -2,6 +2,7 @@ package com.example.baeza.popularmoviesapp.ui;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteAbortException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -120,22 +121,28 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
     //With SQLite
     public void addToFavoriteMovie(View view){
         addNewFavoriteMovie(id, posterPath);
-
-        Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
-        Cursor cursor = getAllMovies();
-        cursor.moveToFirst();
-        String showPoster = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID));
-        int showId = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID));
-        Log.d(TAG, "count from database "+cursor.getCount()+" from Database: poster: "+showPoster+"\n"
-        +" show id: "+showId);
-
+//
+//        Cursor cursor = getAllMovies();
+//        cursor.moveToFirst();
+//        String showPoster = cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID));
+//        int showId = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID));
+//        Log.d(TAG, "count from database "+cursor.getCount()+" from Database: poster: "+showPoster+"\n"
+//        +" show id: "+showId);
+//        cursor.close();
     }
 
-    private long addNewFavoriteMovie(int id, String poster_path){
-        ContentValues cv = new ContentValues();
-        cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
-        cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
-        return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
+    private void addNewFavoriteMovie(int id, String poster_path){
+        try{
+            ContentValues cv = new ContentValues();
+            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
+            mDb.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
+            Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
+
+        }catch (Exception e){
+            e.printStackTrace();
+            Toast.makeText(this, "already in favorites", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private Cursor getAllMovies(){
