@@ -1,6 +1,5 @@
 package com.example.baeza.popularmoviesapp.ui;
 
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,10 +18,11 @@ import android.widget.Toast;
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
-import com.example.baeza.popularmoviesapp.ui.adapters.RecyclerAdapterMainScreen;
+import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterMainScreen;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail.MovieDetailRequest;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
+import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterMainScreenDB;
 
 import java.io.IOException;
 
@@ -29,7 +30,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements RecyclerAdapterMainScreen.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements RVAdapterMainScreen.ListItemClickListener, RVAdapterMainScreenDB.ListItemClickListener {
 
     private final static String TAG = "MainActivity";
 
@@ -42,7 +43,10 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
     private MovieDetailRequest mMovieDetailRequest;
 
     RecyclerView mRecyclerView;
-    RecyclerAdapterMainScreen mRecyclerAdapterMainScreen;
+    RVAdapterMainScreen mRVAdapterMainScreen;
+
+    RVAdapterMainScreenDB mRVAdapterMainScreenDB;
+
     RecyclerView.LayoutManager recyclerViewLayoutManager;
 
     @Override
@@ -74,11 +78,24 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
 
         //giving to the recycler view the grid appearance
         recyclerViewLayoutManager = new GridLayoutManager(this, 2);
-        mRecyclerAdapterMainScreen = new RecyclerAdapterMainScreen(MainActivity.this, MainActivity.this, movieRequest);
+        mRVAdapterMainScreen = new RVAdapterMainScreen(MainActivity.this, MainActivity.this, movieRequest);
         mRecyclerView.setLayoutManager(recyclerViewLayoutManager);
 
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setAdapter(mRecyclerAdapterMainScreen);
+        mRecyclerView.setAdapter(mRVAdapterMainScreen);
+    }
+
+    private void populateUIRecyclerViewDataBase(Cursor cursor){
+        if(mRecyclerView!=null){mRecyclerView.removeAllViews();}
+        mRecyclerView = findViewById(R.id.recyclerView_movies);
+
+        //giving to the recycler view the grid appearance
+        recyclerViewLayoutManager = new GridLayoutManager(this, 2);
+        mRVAdapterMainScreenDB = new RVAdapterMainScreenDB(MainActivity.this, MainActivity.this, cursor);
+        mRecyclerView.setLayoutManager(recyclerViewLayoutManager);
+
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setAdapter(mRVAdapterMainScreenDB);
     }
 
     @Override
@@ -99,6 +116,17 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                         getString(R.string.show_by_top_rated), Toast.LENGTH_SHORT )
                         .show();
                         break;
+            }
+            case R.id.favorites:{
+                try{
+                    Cursor cursor = getAllMovies();
+                    mRecyclerView.removeAllViews();
+                    populateUIRecyclerViewDataBase(cursor);
+                }catch (Exception e){
+            e.printStackTrace();
+                    Log.d(TAG, "EXCEPTION HERE");
+                }
+                break;
             }
             default:{}
         }
@@ -220,16 +248,14 @@ public class MainActivity extends AppCompatActivity implements RecyclerAdapterMa
                     null);
         }
 
-        private void addToFavoriteMovie(View view){
-           // addNewFavoriteMovie()
-        }
-
-        private long addNewFavoriteMovie(int id, String poster_path){
-            ContentValues cv = new ContentValues();
-            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
-            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
-            return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
-        }
-
-
+//        private void addToFavoriteMovie(View view){
+//           // addNewFavoriteMovie()
+//        }
+//
+//        private long addNewFavoriteMovie(int id, String poster_path){
+//            ContentValues cv = new ContentValues();
+//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
+//            return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
+//        }
 }

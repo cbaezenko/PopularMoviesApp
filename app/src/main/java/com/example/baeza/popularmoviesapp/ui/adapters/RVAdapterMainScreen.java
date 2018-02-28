@@ -16,13 +16,13 @@ import com.squareup.picasso.Picasso;
  * Created by baeza on 19.02.2018.
  */
 
-public class RecyclerAdapterMainScreen extends  RecyclerView.Adapter<RecyclerAdapterMainScreen.RecyclerViewHolder>{
+public class RVAdapterMainScreen extends  RecyclerView.Adapter<RVAdapterMainScreen.RecyclerViewHolder>{
 
     final private ListItemClickListener mOnClickListener;
     Context context;
     MovieRequest mMovieRequest;
 
-    public RecyclerAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest){
+    public RVAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest){
         mOnClickListener = listener;
         this.context = context;
         mMovieRequest = movieRequest;

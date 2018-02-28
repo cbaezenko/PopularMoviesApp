@@ -14,12 +14,12 @@ import com.example.baeza.popularmoviesapp.R;
  * Created by baeza on 21.02.2018.
  */
 
-public class RecyclerAdapterDetailMovie extends RecyclerView.Adapter<RecyclerAdapterDetailMovie.RecyclerViewHolder> {
+public class RVAdapterDetailMovie extends RecyclerView.Adapter<RVAdapterDetailMovie.RecyclerViewHolder> {
 
     final private  ListItemClickListener mOnClickListener;
     Context context;
 
-    public RecyclerAdapterDetailMovie(Context context,ListItemClickListener onClickListener) {
+    public RVAdapterDetailMovie(Context context, ListItemClickListener onClickListener) {
         mOnClickListener = onClickListener;
         this.context = context;
     }

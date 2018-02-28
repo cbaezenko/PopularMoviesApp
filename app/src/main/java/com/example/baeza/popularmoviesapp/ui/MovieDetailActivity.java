@@ -2,7 +2,6 @@ package com.example.baeza.popularmoviesapp.ui;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteAbortException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -19,14 +18,14 @@ import android.widget.Toast;
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
-import com.example.baeza.popularmoviesapp.ui.adapters.RecyclerAdapterDetailMovie;
+import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterDetailMovie;
 import com.squareup.picasso.Picasso;
 
 /**
  * Created by baeza on 16.02.2018.
  */
 
-public class MovieDetailActivity extends AppCompatActivity implements RecyclerAdapterDetailMovie.ListItemClickListener {
+public class MovieDetailActivity extends AppCompatActivity implements RVAdapterDetailMovie.ListItemClickListener {
 
     public final static String TITLE_KEY = "title_key";
     public final static String POSTER_PATH = "poster_path_key";
@@ -41,7 +40,7 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
     private SQLiteDatabase mDb;
 
     private RecyclerView mRecyclerView;
-    private RecyclerAdapterDetailMovie mRecyclerAdapterDetailMovie;
+    private RVAdapterDetailMovie mRVAdapterDetailMovie;
     private ImageView iv_poster;
     private TextView tvTitle, tvOverview, tvRunTime, tvVoteAverage, tvReleaseDate;
     private String titleMovie, posterPath, overview, runtime, voteAverage, release_date;
@@ -79,10 +78,10 @@ public class MovieDetailActivity extends AppCompatActivity implements RecyclerAd
         mRecyclerView = findViewById(R.id.rv_trailers);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MovieDetailActivity.this, LinearLayoutManager.VERTICAL, false);
-        mRecyclerAdapterDetailMovie = new RecyclerAdapterDetailMovie(MovieDetailActivity.this, this);
+        mRVAdapterDetailMovie = new RVAdapterDetailMovie(MovieDetailActivity.this, this);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.setAdapter(mRecyclerAdapterDetailMovie);
+        mRecyclerView.setAdapter(mRVAdapterDetailMovie);
     }
 
     public void getExtrasFromIntent(){
