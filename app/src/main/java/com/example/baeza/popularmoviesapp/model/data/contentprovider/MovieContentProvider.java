@@ -1,13 +1,17 @@
 package com.example.baeza.popularmoviesapp.model.data.contentprovider;
 
 import android.content.ContentProvider;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
 
 /**
@@ -15,8 +19,26 @@ import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
  */
 
 public class MovieContentProvider extends ContentProvider{
+    //It's convention to use 100, 200, 300, etc for directories,
+    //and related ints (102, 102,..) for items in that directory.
+    public static final int MOVIES = 100;
+    public static final int MOVIES_WITH_ID = 101;
 
     private FavoriteMovieDBHelper mDBHelper;
+
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
+
+    public static UriMatcher buildUriMatcher(){
+        UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
+
+        //add matches with addURI(String authority, String path, int code)
+        //directory
+        uriMatcher.addURI(FavoriteMovieContract.AUTHORITY, FavoriteMovieContract.PATH_MOVIES, MOVIES);
+        //single item
+        uriMatcher.addURI(FavoriteMovieContract.AUTHORITY, FavoriteMovieContract.PATH_MOVIES + "/#", MOVIES_WITH_ID);
+
+        return uriMatcher;
+    }
 
     @Override
     public boolean onCreate() {
@@ -42,7 +64,35 @@ public class MovieContentProvider extends ContentProvider{
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
-        return null;
+        //get access to the database and add new data
+        final SQLiteDatabase database = mDBHelper.getWritableDatabase();
+        //URI matching code to identify the match for the movies directory
+        int match = sUriMatcher.match(uri);
+
+        Uri returnUri;
+
+        switch (match){
+            case MOVIES:{
+                //insert values into Movies table
+                long id = database.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null,contentValues);
+                //if id is -1 means the insert was wrong
+                    if ( id > 0 ){
+                        //success
+                        returnUri = ContentUris.withAppendedId(FavoriteMovieContract.BASE_CONTENT_URI, id);
+
+                    }else {
+                        throw new android.database.SQLException("Failed to insert row into "+ uri);
+                    }
+                break;
+            }
+            default:{
+                throw new UnsupportedOperationException("Unknown uri " + uri);
+            }
+        }
+
+        //notify the resolver if the uri has been changed
+        getContext().getContentResolver().notifyChange(uri, null);
+        return returnUri;
     }
 
     @Override
