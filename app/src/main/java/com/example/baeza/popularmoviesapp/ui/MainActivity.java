@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         private void showToast(String text, Context context){Toast.makeText(context, text, Toast.LENGTH_SHORT).show();}
 
-//        private void addToFavoriteMovie(View view){
+//        private void onClickAddFavMovie(View view){
 //           // addNewFavoriteMovie()
 //        }
 //

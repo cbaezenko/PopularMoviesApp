@@ -3,6 +3,7 @@ package com.example.baeza.popularmoviesapp.ui;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -118,8 +119,9 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 
 
     //With SQLite
-    public void addToFavoriteMovie(View view){
-        addNewFavoriteMovie(id, posterPath, titleMovie);
+    public void onClickAddFavMovie(View view){
+//        addNewFavoriteMovie(id, posterPath, titleMovie);
+        addNewFavMov(id, posterPath, titleMovie);
 
 //        Cursor cursor = getAllMovies();
 //        cursor.moveToFirst();
@@ -130,18 +132,32 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 //        cursor.close();
     }
 
-    private void addNewFavoriteMovie(int id, String poster_path, String titleMovie){
-        try{
-            ContentValues cv = new ContentValues();
-            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
-            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, poster_path);
-            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
-            mDb.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
-            Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
+//    private void addNewFavoriteMovie(int id, String poster_path, String titleMovie){
+//        try{
+//            ContentValues cv = new ContentValues();
+//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, poster_path);
+//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
+//            mDb.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
+//            Toast.makeText(this, "added to favorite", Toast.LENGTH_SHORT).show();
+//
+//        }catch (Exception e){
+//            e.printStackTrace();
+//            Toast.makeText(this, "already in favorites", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
-        }catch (Exception e){
-            e.printStackTrace();
-            Toast.makeText(this, "already in favorites", Toast.LENGTH_SHORT).show();
+    //with content resolver
+    private void addNewFavMov(int id,String posterPath, String titleMovie){
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+        contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
+        contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, posterPath);
+
+        //insert new movie data via a ContentResolver
+        Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovie.CONTENT_URI, contentValues);
+        if(uri != null){
+            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
