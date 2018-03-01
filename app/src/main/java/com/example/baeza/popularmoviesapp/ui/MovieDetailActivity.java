@@ -147,8 +147,12 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 //        }
 //    }
 
+
+
     //with content resolver
     private void addNewFavMov(int id,String posterPath, String titleMovie){
+        Log.d(TAG, "Existe el id ? que responde"+checkIfExist(id));
+
         ContentValues contentValues = new ContentValues();
         contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
         contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
@@ -161,16 +165,33 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
         }
     }
 
-    private Cursor getAllMovies(){
-        return mDb.query(
-                FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+    // ESTA ES EL METODO QUE ESPERO QUE ME DEVUELVA ALGUN VALOR QUE PUEDA USAR COMO FUTURO IF O BOOLEANO
+    private Cursor checkIfExist(int id){
+        try{
+        return getContentResolver().query(FavoriteMovieContract.FavoriteMovie.CONTENT_URI,
+                null,
+                FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID+" = "+id,
                 null,
                 null,
-                null,
-                null,
-                null,
-                null);
+                null);}
+
+        catch (Exception e){
+            Log.d(TAG, "failed to asynchronously load data");
+            e.printStackTrace();
+            return null;}
     }
+
+
+//    private Cursor getAllMovies(){
+//        return mDb.query(
+//                FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null,
+//                null);
+//    }
 
     @Override
     public void onStop(){

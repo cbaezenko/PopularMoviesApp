@@ -69,6 +69,30 @@ public class MovieContentProvider extends ContentProvider{
                         sortOrder);
                 break;
             }
+
+            case MOVIES_WITH_ID:{
+                //using selection and selectionArgs
+                //URI: content://<authority>/movies/#
+                //Index 0 would be the movie portion of the path
+                //and index 1 is the segment right next to that
+
+                String id = uri.getPathSegments().get(1);
+                //Selection is the _ID column = ?, and the Selection args = the row ID from the URI
+                String mSelection = "_id=?";
+                String[] mSelectionArgs = new String[]{id};
+
+
+                retCursor = database.query(FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+                        projection,
+                        mSelection,
+                        mSelectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+
+
+                break;
+            }
             default:{
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
