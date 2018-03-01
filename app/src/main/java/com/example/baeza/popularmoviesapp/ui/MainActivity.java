@@ -31,7 +31,7 @@ import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements RVAdapterMainScreen.ListItemClickListener, RVAdapterMainScreenDB.ListItemClickListener {
+public class MainActivity extends AppCompatActivity implements RVAdapterMainScreen.ListItemClickListener, RVAdapterMainScreenDB.ListItemClickListenerContentProvider {
 
     private final static String TAG = "MainActivity";
     private static final String INFO_TO_KEEP =  "info";
@@ -113,7 +113,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             }
             case R.id.favorites:{
                 try{
-                    Cursor cursor = getAllMovies();
+//                    Cursor cursor = getAllMovies();
+                    Cursor cursor = getAllMoviesFromContent();
+
                     mRecyclerView.removeAllViews();
                     populateUIRecyclerViewDataBase(cursor);
                 }catch (Exception e){
@@ -130,33 +132,22 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     @Override
     public void onListItemClick(int clickedItemIndex) {
         showProgressBar(true);
+
         ApiUtils.getApiServiceMovieDetail().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
                 getString(R.string.key_movies))
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieDetailRequest>() {
                     @Override
                     public void onCompleted() {}
-
                     @Override
                     public void onError(Throwable e) {
                         showProgressBar(false);
-                        showErrorMsg(true);
-                    }
-
+                        showErrorMsg(true);}
                     @Override
                     public void onNext(MovieDetailRequest movieDetailRequest) {
-
                         showProgressBar(false);
                         mMovieDetailRequest = movieDetailRequest;
-                    Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-                    intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie()+mMovieDetailRequest.getPosterPath());
-                    intent.putExtra(MovieDetailActivity.OVERVIEW, mMovieDetailRequest.getOverview());
-                    intent.putExtra(MovieDetailActivity.RUNTIME, mMovieDetailRequest.getRuntime());
-                    intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, mMovieDetailRequest.getVoteAverage());
-                    intent.putExtra(MovieDetailActivity.RELEASE_DATE, mMovieDetailRequest.getReleaseDate());
-                    intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
-                    intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
-                    startActivity(intent);
+                        intentToDetailMovieActivity(mMovieDetailRequest);
                     }});
     }
 
@@ -229,18 +220,82 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             }
         }}
 
-        private Cursor getAllMovies(){
-            return mDb.query(
-                    FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null);
-        }
+        //Hacerlo en un RX
+//        private Cursor getAllMovies(){
+//            return mDb.query(
+//                    FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+//                    null,
+//                    null,
+//                    null,
+//                    null,
+//                    null,
+//                    null);
+//        }
 
-        private void showToast(String text, Context context){Toast.makeText(context, text, Toast.LENGTH_SHORT).show();}
+
+    //Hacerlo en un RX
+    private Cursor getAllMoviesFromContent(){
+            try {
+                return getContentResolver().query(FavoriteMovieContract.FavoriteMovie.CONTENT_URI,
+                        null,
+                        null,
+                        null,
+                        null);
+            }catch (Exception e){
+                Log.e(TAG, "Failed to asynchronously load data.");
+                e.printStackTrace();
+                return null;}
+    }
+
+    private void showToast(String text, Context context){Toast.makeText(context, text, Toast.LENGTH_SHORT).show();}
+
+    @Override
+    public void onListItemClickContentProvider(int clickedItemIndex) {
+            Cursor cursor = getCursorFromClick();
+            cursor.moveToPosition(clickedItemIndex);
+            int id = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID));
+                showProgressBar(true);
+                ApiUtils.getApiServiceMovieDetail().getMovieDetail(id, getString(R.string.key_movies))
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MovieDetailRequest>() {
+                    @Override
+                    public void onCompleted() {}
+                    @Override
+                    public void onError(Throwable e) {
+                    showProgressBar(false);
+                    showErrorMsg(true);}
+                    @Override
+                    public void onNext(MovieDetailRequest movieDetailRequest) {
+                        showProgressBar(false);
+                        mMovieDetailRequest = movieDetailRequest;
+                        intentToDetailMovieActivity(mMovieDetailRequest);
+                    }});
+    }
+
+    private void intentToDetailMovieActivity(MovieDetailRequest movieDetailRequest){
+        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
+        intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetailRequest.getOverview());
+        intent.putExtra(MovieDetailActivity.RUNTIME, movieDetailRequest.getRuntime());
+        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, movieDetailRequest.getVoteAverage());
+        intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetailRequest.getReleaseDate());
+        intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
+        intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
+        startActivity(intent);
+    }
+
+    private Cursor getCursorFromClick(){
+        try{
+            return getContentResolver().query(FavoriteMovieContract.FavoriteMovie.CONTENT_URI,
+                    null,
+                    null,
+                    null,
+                    null);}
+        catch (Exception e){
+            Log.d(TAG, "Failed to get the cursor");
+            e.printStackTrace();
+            return  null;}
+    }
 
 //        private void onClickAddFavMovie(View view){
 //           // addNewFavoriteMovie()

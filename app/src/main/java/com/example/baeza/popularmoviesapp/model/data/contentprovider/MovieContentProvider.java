@@ -51,8 +51,32 @@ public class MovieContentProvider extends ContentProvider{
 
     @Nullable
     @Override
-    public Cursor query(@NonNull Uri uri, @Nullable String[] strings, @Nullable String s, @Nullable String[] strings1, @Nullable String s1) {
-        return null;
+    public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
+                        @Nullable String[] selectionArgs, @Nullable String sortOrder) {
+        final SQLiteDatabase database = mDBHelper.getReadableDatabase();
+        //URI match code
+        int match = sUriMatcher.match(uri);
+        Cursor retCursor;
+
+        switch (match){
+            case MOVIES:{ //for all movies
+                retCursor = database.query(FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
+                break;
+            }
+            default:{
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+            }
+        }
+        //Set a notification URI on the Cursor, this way if anything changes in the URI,
+        //the cursor will know
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
 
     @Nullable
@@ -68,18 +92,15 @@ public class MovieContentProvider extends ContentProvider{
         final SQLiteDatabase database = mDBHelper.getWritableDatabase();
         //URI matching code to identify the match for the movies directory
         int match = sUriMatcher.match(uri);
-
         Uri returnUri;
 
         switch (match){
             case MOVIES:{
                 //insert values into Movies table
-                long id = database.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null,contentValues);
+                long id = database.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null,contentValues);
                 //if id is -1 means the insert was wrong
-                    if ( id > 0 ){
-                        //success
+                    if ( id > 0 ){ //success
                         returnUri = ContentUris.withAppendedId(FavoriteMovieContract.BASE_CONTENT_URI, id);
-
                     }else {
                         throw new android.database.SQLException("Failed to insert row into "+ uri);
                     }
@@ -89,7 +110,6 @@ public class MovieContentProvider extends ContentProvider{
                 throw new UnsupportedOperationException("Unknown uri " + uri);
             }
         }
-
         //notify the resolver if the uri has been changed
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;

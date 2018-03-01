@@ -18,11 +18,11 @@ import com.squareup.picasso.Picasso;
 
 public class RVAdapterMainScreenDB extends  RecyclerView.Adapter<RVAdapterMainScreenDB.RecyclerViewHolder>{
 
-    final private RVAdapterMainScreenDB.ListItemClickListener mOnClickListener;
+    final private RVAdapterMainScreenDB.ListItemClickListenerContentProvider mOnClickListener;
     Context context;
     Cursor mCursor;
 
-    public RVAdapterMainScreenDB(Context context, ListItemClickListener listener, Cursor cursor){
+    public RVAdapterMainScreenDB(Context context, ListItemClickListenerContentProvider listener, Cursor cursor){
         mOnClickListener = listener;
         this.context = context;
         mCursor = cursor;
@@ -71,10 +71,10 @@ public class RVAdapterMainScreenDB extends  RecyclerView.Adapter<RVAdapterMainSc
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
-            mOnClickListener.onListItemClick(clickedPosition);
+            mOnClickListener.onListItemClickContentProvider(clickedPosition);
         }
     }
-    public interface  ListItemClickListener{
-        void onListItemClick(int clickedItemIndex);
+    public interface  ListItemClickListenerContentProvider{
+        void onListItemClickContentProvider(int clickedItemIndex);
     }
 }
