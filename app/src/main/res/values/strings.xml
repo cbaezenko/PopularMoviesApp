@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">PopularMoviesApp</string>
 
-    <string name="key_movies">KEY HERE FOR MOVIES</string>
+    <string name="key_movies">KEY HERE</string>
 
     <string name="popularity">Popularity</string>
     <string name="top_rated">Top Rated</string>
@@ -23,4 +23,7 @@
 
     <string name="mark_as_favorite">MARK AS\nFAVORITE</string>
     <string name="error_message">Failed to get results, please try again</string>
+
+    <string name="added_to_fav">added to favorites</string>
+    <string name="deleted_from_fav">deleted from favorites</string>
 </resources>

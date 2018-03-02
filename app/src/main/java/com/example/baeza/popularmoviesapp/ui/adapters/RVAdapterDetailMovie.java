@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
 
 /**
  * Created by baeza on 21.02.2018.
@@ -18,10 +19,12 @@ public class RVAdapterDetailMovie extends RecyclerView.Adapter<RVAdapterDetailMo
 
     final private  ListItemClickListener mOnClickListener;
     Context context;
+    MovieTrailer mMovieTrailer;
 
-    public RVAdapterDetailMovie(Context context, ListItemClickListener onClickListener) {
+    public RVAdapterDetailMovie(Context context, ListItemClickListener onClickListener, MovieTrailer movieTrailer) {
         mOnClickListener = onClickListener;
         this.context = context;
+        mMovieTrailer = movieTrailer;
     }
 
     @Override
@@ -36,12 +39,12 @@ public class RVAdapterDetailMovie extends RecyclerView.Adapter<RVAdapterDetailMo
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.tv_trailer.setText(context.getString(R.string.trailer_str)+position);
+        holder.tv_trailer.setText(""+mMovieTrailer.getResults().get(position).getSize());
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return mMovieTrailer.getResults().size();
     }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{

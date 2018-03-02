@@ -5,7 +5,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:id="@+id/coordinator"
+        android:layout_height="match_parent">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -84,16 +87,15 @@
                                 android:id="@+id/voteAverage"
                                 style="@style/detail_movie_text"/>
 
-                            <Button
+                            <ImageButton
+                                android:background="@android:color/transparent"
+                                android:adjustViewBounds="true"
                                 android:onClick="onClickAddFavMovie"
-                                android:textSize="12sp"
                                 android:fontFamily="sans-serif"
-                                android:background="@color/colorAccent"
                                 android:id="@+id/btn_mark_favorite"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:text="@string/mark_as_favorite"/>
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_marginTop="8dp"/>
 
                         </LinearLayout>
                     </LinearLayout>
@@ -105,8 +107,10 @@
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_trailers"
-                style="@style/detail_movie">
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
             </android.support.v7.widget.RecyclerView>
         </LinearLayout>
     </ScrollView>
+    </android.support.design.widget.CoordinatorLayout>
 </android.support.constraint.ConstraintLayout>
