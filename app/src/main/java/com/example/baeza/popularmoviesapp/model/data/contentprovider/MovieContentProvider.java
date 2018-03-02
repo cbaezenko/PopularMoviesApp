@@ -77,8 +77,8 @@ public class MovieContentProvider extends ContentProvider{
                 //and index 1 is the segment right next to that
 
                 String id = uri.getPathSegments().get(1);
-                //Selection is the _ID column = ?, and the Selection args = the row ID from the URI
-                String mSelection = "_id=?";
+                //Selection is the movie_id column = ?, and the Selection args = the row ID from the URI
+                String mSelection = "movie_id=?";
                 String[] mSelectionArgs = new String[]{id};
 
 
@@ -141,7 +141,43 @@ public class MovieContentProvider extends ContentProvider{
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String s, @Nullable String[] strings) {
-        return 0;
+        final SQLiteDatabase database = mDBHelper.getWritableDatabase();
+        int match = sUriMatcher.match(uri);
+
+        int deleted;
+
+        /*
+         * If we pass null as the selection to SQLiteDatabase#delete, our entire table will be
+         * deleted. However, if we do pass null and delete all of the rows in the table, we won't
+         * know how many rows were deleted. According to the documentation for SQLiteDatabase,
+         * passing "1" for the selection will delete all rows and return the number of rows
+         * deleted, which is what the caller of this method expects.
+         */
+
+        if(s == null){ s = " 1";}
+
+        switch (match){
+            case MOVIES_WITH_ID:{
+
+                String id = uri.getPathSegments().get(1);
+                String mSelection = "movie_id=?";
+                String[] mSelectionArgs = new String[]{id};
+
+                 deleted = database.delete(FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+                        mSelection,
+                        mSelectionArgs);
+
+                break;
+            }
+            default:{
+                throw new UnsupportedOperationException("Unknown uri : "+ uri);
+            }
+        }
+        //if we actually deleted any rows we notify that a change has occurred to this URI
+        if(deleted != 0) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
+        return deleted;
     }
 
     @Override

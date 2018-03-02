@@ -104,6 +104,7 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
         tvReleaseDate = findViewById(R.id.year);
 
         btnFavorite = findViewById(R.id.btn_mark_favorite);
+        setButtonFav();
     }
 
     @Override
@@ -130,6 +131,7 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 //        Log.d(TAG, "count from database "+cursor.getCount()+" from Database: poster: "+showPoster+"\n"
 //        +" show id: "+showId);
 //        cursor.close();
+        setButtonFav();
     }
 
 //    private void addNewFavoriteMovie(int id, String poster_path, String titleMovie){
@@ -148,21 +150,51 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 //    }
 
 
+    private void setButtonFav(){
+        if (isValueInDB(id)){
+        btnFavorite.setText("DELETE FROM FAVS");
+        btnFavorite.setBackgroundColor(getResources().getColor((R.color.my_dark_green)));}
+        else {
+            btnFavorite.setText(getString(R.string.mark_as_favorite));
+            btnFavorite.setBackgroundColor(getResources().getColor((R.color.colorAccent)));
+        }
+    }
 
     //with content resolver
     private void addNewFavMov(int id,String posterPath, String titleMovie){
-        Log.d(TAG, "Existe el id ? que responde"+checkIfExist(id));
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
-        contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
-        contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, posterPath);
+        if(isValueInDB(id)==false) {
 
-        //insert new movie data via a ContentResolver
-        Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovie.CONTENT_URI, contentValues);
-        if(uri != null){
-            Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, posterPath);
+
+            //insert new movie data via a ContentResolver
+            Uri uri = getContentResolver().insert(FavoriteMovieContract.FavoriteMovie.CONTENT_URI, contentValues);
+            if (uri != null) {
+                Toast.makeText(getBaseContext(), uri.toString(), Toast.LENGTH_SHORT).show();
+            }
         }
+        else if (isValueInDB(id)==true){
+            deleteMovFromFav(id);
+        }
+    }
+
+    private int deleteMovFromFav(int id){
+        int i;
+        String stringId = Integer.toString(id);
+        Uri uri = FavoriteMovieContract.FavoriteMovie.CONTENT_URI;
+        uri = uri.buildUpon().appendPath(stringId).build();
+        try{
+            i = getContentResolver().delete(uri,null,null);
+        }catch (Exception e){
+            Log.d(TAG, "exception here ");
+            e.printStackTrace();
+            i = 0;
+        }
+        Log.d(TAG, "BORRADOS TANTOS ITEMS "+ i);
+        return  i;
     }
 
     // ESTA ES EL METODO QUE ESPERO QUE ME DEVUELVA ALGUN VALOR QUE PUEDA USAR COMO FUTURO IF O BOOLEANO
@@ -179,6 +211,16 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
             Log.d(TAG, "failed to asynchronously load data");
             e.printStackTrace();
             return null;}
+    }
+
+    private boolean isValueInDB(int id){
+        if(checkIfExist(id).getCount() < 1){
+            Log.d(TAG, "value don't exist");
+            return false;
+        }
+        else
+            Log.d(TAG, "value exist");
+            return true;
     }
 
 
