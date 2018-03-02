@@ -16,15 +16,8 @@ public class ApiUtils {
     private final static String URL_BASE_FOR_IMAGE_MOVIE = IMAGE_MOVIE_BASE_URL + RECOMMENDED_SIZE_MOBILE;
 
     private final static String BASE_YOUTUBE_VIDEOS = "http://www.youtube.com/watch?v=";
-    public static ApiService getApiServiceMovieList(){
-        return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
-    }
 
-    public static ApiService getApiServiceMovieDetail(){
-        return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
-    }
-
-    public static ApiService getApiServiceTrailer(){
+    public static ApiService getApiService(){
         return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
     }
 

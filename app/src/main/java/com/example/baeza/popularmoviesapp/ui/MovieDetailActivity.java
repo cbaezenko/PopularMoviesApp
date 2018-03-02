@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterDetailMovie;
@@ -49,6 +50,7 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
 
     private SQLiteDatabase mDb;
     private MovieTrailer mMovieTrailer;
+    private MovieReview mMovieReview;
 
     private RecyclerView mRecyclerView;
     private RVAdapterDetailMovie mRVAdapterDetailMovie;
@@ -227,17 +229,26 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
     }
 
     private void requestMovieTrailer(int movie_id, String api_key){
-        ApiUtils.getApiServiceTrailer().getMovieTrailer(movie_id, api_key)
+        ApiUtils.getApiService().getMovieTrailer(movie_id, api_key)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieTrailer>() {
-                    @Override
-                    public void onCompleted() {}
-                    @Override
-                    public void onError(Throwable e) {}
-                    @Override
-                    public void onNext(MovieTrailer movieTrailer) {
+                    @Override public void onCompleted() {}
+                    @Override public void onError(Throwable e) {}
+                    @Override public void onNext(MovieTrailer movieTrailer) {
                         mMovieTrailer = movieTrailer;
                         if(mRecyclerView!=null){mRecyclerView.removeAllViews();}
-                        populateUIwithRecyclerView(movieTrailer);}});
+                        populateUIwithRecyclerView(movieTrailer);
+                    }});
+    }
+
+    private void requestMovieReview(int movie_id, String api_key){
+        ApiUtils.getApiService().getMovieReview(movie_id, api_key)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MovieReview>() {
+                    @Override public void onCompleted() {}
+                    @Override public void onError(Throwable e) {}
+                    @Override public void onNext(MovieReview movieReview) {
+                        //insert code here
+                    }});
     }
 }

@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     public void onListItemClick(int clickedItemIndex) {
         showProgressBar(true);
 
-        ApiUtils.getApiServiceMovieDetail().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
+        ApiUtils.getApiService().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
                 getString(R.string.key_movies))
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieDetailRequest>() {
@@ -178,17 +178,14 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             case POPULAR: {
                 if(mMovieRequest!=null){mMovieRequest=null;}
                 showProgressBar(true);
-                ApiUtils.getApiServiceMovieList().getMovieListPopularity(getString(R.string.key_movies))
+                ApiUtils.getApiService().getMovieListPopularity(getString(R.string.key_movies))
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieRequest>() {
-                            @Override
-                            public void onCompleted() {}
-                            @Override
-                            public void onError(Throwable e) {
+                            @Override public void onCompleted() {}
+                            @Override public void onError(Throwable e) {
                                 showProgressBar(false);
                                 showErrorMsg(true);}
-                            @Override
-                            public void onNext(MovieRequest movieRequest) {
+                            @Override public void onNext(MovieRequest movieRequest) {
                                 showProgressBar(false);
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest =movieRequest;
@@ -198,17 +195,14 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             case TOP_RATED: {
                 showProgressBar(true);
                 if(mMovieRequest!=null){mMovieRequest=null;}
-                ApiUtils.getApiServiceMovieList().getMovieListRated(getString(R.string.key_movies))
+                ApiUtils.getApiService().getMovieListRated(getString(R.string.key_movies))
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieRequest>() {
-                            @Override
-                            public void onCompleted() {}
-                            @Override
-                            public void onError(Throwable e) {
+                            @Override public void onCompleted() {}
+                            @Override public void onError(Throwable e) {
                                 showProgressBar(false);
                                 showErrorMsg(true);}
-                            @Override
-                            public void onNext(MovieRequest movieRequest) {
+                            @Override public void onNext(MovieRequest movieRequest) {
                                 showProgressBar(false);
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest = movieRequest;
@@ -255,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             cursor.moveToPosition(clickedItemIndex);
             int id = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID));
                 showProgressBar(true);
-                ApiUtils.getApiServiceMovieDetail().getMovieDetail(id, getString(R.string.key_movies))
+                ApiUtils.getApiService().getMovieDetail(id, getString(R.string.key_movies))
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieDetailRequest>() {
                     @Override
@@ -292,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     null,
                     null);}
         catch (Exception e){
-            Log.d(TAG, "Failed to get the cursor");
             e.printStackTrace();
             return  null;}
     }

@@ -2,6 +2,7 @@ package com.example.baeza.popularmoviesapp.model.data.network.remote;
 
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail.MovieDetailRequest;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
 
 import retrofit2.http.GET;
@@ -27,4 +28,8 @@ public interface ApiService {
     @GET("{id}/videos?api_key")
     Observable<MovieTrailer> getMovieTrailer(@Path("id") int id,
                                              @Query("api_key") String api_key);
+
+    @GET("{id}/reviews?api_key")
+    Observable<MovieReview> getMovieReview(@Path("id") int id,
+                                           @Query("api_key") String api_key);
 }
