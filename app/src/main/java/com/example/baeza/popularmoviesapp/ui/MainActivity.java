@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +29,10 @@ import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterMainScreenDB;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.function.Consumer;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -41,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private MovieRequest mMovieRequest;
     private MovieDetailRequest mMovieDetailRequest;
+
+    TextView tv_error_msg;
 
     RecyclerView mRecyclerView;
     RVAdapterMainScreen mRVAdapterMainScreen;
@@ -160,7 +169,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     }
 
     private void showErrorMsg(boolean isShownErrorMsg){
-        TextView tv_error_msg = findViewById(R.id.tv_error_msg);
         if(isShownErrorMsg){
             tv_error_msg.setVisibility(View.VISIBLE);}
         else{
@@ -288,6 +296,53 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         catch (Exception e){
             e.printStackTrace();
             return  null;}
+    }
+
+
+
+    class InternetCheck extends AsyncTask<Void, Void, Boolean>{
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            try{
+                int timeoutMs = 1500;
+                Socket socket = new Socket();
+                SocketAddress socketAddress = new InetSocketAddress("8.8.8.8",53);
+
+                socket.connect(socketAddress, timeoutMs);
+                socket.close();
+
+                return  true;
+            }
+            catch (IOException e){return false;}
+        }
+
+        @Override
+        protected void onPostExecute(Boolean isConnected){
+            if(!isConnected){
+                tv_error_msg.setText(getString(R.string.no_internet_connection));
+            }
+        }
+    }
+
+    private boolean isNetworkConnection(){
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return  networkInfo != null && networkInfo.isConnectedOrConnecting();
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        tv_error_msg = findViewById(R.id.tv_error_msg);
+
+        if(!isNetworkConnection()){
+             tv_error_msg.setText(getString(R.string.no_network_connection));
+         }
+
+        new InternetCheck();
+
     }
 
 //        private void onClickAddFavMovie(View view){
