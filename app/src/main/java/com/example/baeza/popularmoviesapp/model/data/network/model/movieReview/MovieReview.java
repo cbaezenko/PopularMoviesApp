@@ -2,6 +2,7 @@
 package com.example.baeza.popularmoviesapp.model.data.network.model.movieReview;
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 

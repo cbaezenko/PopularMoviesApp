@@ -16,13 +16,13 @@ import com.squareup.picasso.Picasso;
  * Created by baeza on 28.02.2018.
  */
 
-public class RVAdapterMainScreenDB extends  RecyclerView.Adapter<RVAdapterMainScreenDB.RecyclerViewHolder>{
+public class RVAdapterMainScreenDB extends RecyclerView.Adapter<RVAdapterMainScreenDB.RecyclerViewHolder> {
 
     final private RVAdapterMainScreenDB.ListItemClickListenerContentProvider mOnClickListener;
     Context context;
     Cursor mCursor;
 
-    public RVAdapterMainScreenDB(Context context, ListItemClickListenerContentProvider listener, Cursor cursor){
+    public RVAdapterMainScreenDB(Context context, ListItemClickListenerContentProvider listener, Cursor cursor) {
         mOnClickListener = listener;
         this.context = context;
         mCursor = cursor;
@@ -34,7 +34,7 @@ public class RVAdapterMainScreenDB extends  RecyclerView.Adapter<RVAdapterMainSc
         int layout = R.layout.item_recycler_view;
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(layout, parent,false);
+        View view = inflater.inflate(layout, parent, false);
         RecyclerViewHolder viewHolder = new RecyclerViewHolder(view);
 
         return viewHolder;
@@ -60,21 +60,24 @@ public class RVAdapterMainScreenDB extends  RecyclerView.Adapter<RVAdapterMainSc
         return mCursor.getCount();
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView imageMovie;
+
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             imageMovie = itemView.findViewById(R.id.leftMovie);
             itemView.setOnClickListener(this);
         }
+
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
             mOnClickListener.onListItemClickContentProvider(clickedPosition);
         }
     }
-    public interface  ListItemClickListenerContentProvider{
+
+    public interface ListItemClickListenerContentProvider {
         void onListItemClickContentProvider(int clickedItemIndex);
     }
 }

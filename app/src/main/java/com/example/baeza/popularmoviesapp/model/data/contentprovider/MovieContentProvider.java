@@ -18,7 +18,7 @@ import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
  * Created by baeza on 28.02.2018.
  */
 
-public class MovieContentProvider extends ContentProvider{
+public class MovieContentProvider extends ContentProvider {
     //It's convention to use 100, 200, 300, etc for directories,
     //and related ints (102, 102,..) for items in that directory.
     public static final int MOVIES = 100;
@@ -28,7 +28,7 @@ public class MovieContentProvider extends ContentProvider{
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
 
-    public static UriMatcher buildUriMatcher(){
+    public static UriMatcher buildUriMatcher() {
         UriMatcher uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 
         //add matches with addURI(String authority, String path, int code)
@@ -58,8 +58,8 @@ public class MovieContentProvider extends ContentProvider{
         int match = sUriMatcher.match(uri);
         Cursor retCursor;
 
-        switch (match){
-            case MOVIES:{ //for all movies
+        switch (match) {
+            case MOVIES: { //for all movies
                 retCursor = database.query(FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
                         projection,
                         selection,
@@ -70,7 +70,7 @@ public class MovieContentProvider extends ContentProvider{
                 break;
             }
 
-            case MOVIES_WITH_ID:{
+            case MOVIES_WITH_ID: {
                 //using selection and selectionArgs
                 //URI: content://<authority>/movies/#
                 //Index 0 would be the movie portion of the path
@@ -93,7 +93,7 @@ public class MovieContentProvider extends ContentProvider{
 
                 break;
             }
-            default:{
+            default: {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
             }
         }
@@ -118,19 +118,19 @@ public class MovieContentProvider extends ContentProvider{
         int match = sUriMatcher.match(uri);
         Uri returnUri;
 
-        switch (match){
-            case MOVIES:{
+        switch (match) {
+            case MOVIES: {
                 //insert values into Movies table
-                long id = database.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null,contentValues);
+                long id = database.insertOrThrow(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, contentValues);
                 //if id is -1 means the insert was wrong
-                    if ( id > 0 ){ //success
-                        returnUri = ContentUris.withAppendedId(FavoriteMovieContract.BASE_CONTENT_URI, id);
-                    }else {
-                        throw new android.database.SQLException("Failed to insert row into "+ uri);
-                    }
+                if (id > 0) { //success
+                    returnUri = ContentUris.withAppendedId(FavoriteMovieContract.BASE_CONTENT_URI, id);
+                } else {
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                }
                 break;
             }
-            default:{
+            default: {
                 throw new UnsupportedOperationException("Unknown uri " + uri);
             }
         }
@@ -154,27 +154,29 @@ public class MovieContentProvider extends ContentProvider{
          * deleted, which is what the caller of this method expects.
          */
 
-        if(s == null){ s = " 1";}
+        if (s == null) {
+            s = " 1";
+        }
 
-        switch (match){
-            case MOVIES_WITH_ID:{
+        switch (match) {
+            case MOVIES_WITH_ID: {
 
                 String id = uri.getPathSegments().get(1);
                 String mSelection = "movie_id=?";
                 String[] mSelectionArgs = new String[]{id};
 
-                 deleted = database.delete(FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
+                deleted = database.delete(FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
                         mSelection,
                         mSelectionArgs);
 
                 break;
             }
-            default:{
-                throw new UnsupportedOperationException("Unknown uri : "+ uri);
+            default: {
+                throw new UnsupportedOperationException("Unknown uri : " + uri);
             }
         }
         //if we actually deleted any rows we notify that a change has occurred to this URI
-        if(deleted != 0) {
+        if (deleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return deleted;

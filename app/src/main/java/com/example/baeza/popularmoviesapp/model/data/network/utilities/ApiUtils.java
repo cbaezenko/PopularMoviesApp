@@ -17,10 +17,15 @@ public class ApiUtils {
 
     private final static String BASE_YOUTUBE_VIDEOS = "http://www.youtube.com/watch?v=";
 
-    public static ApiService getApiService(){
+    public static ApiService getApiService() {
         return RetrofitClient.getClient(BASE_URL_MOVIE).create(ApiService.class);
     }
 
-    public static String getUrlBaseForImageMovie() {return URL_BASE_FOR_IMAGE_MOVIE;}
-    public static String getBaseYoutubeVideos(){return BASE_YOUTUBE_VIDEOS;}
+    public static String getUrlBaseForImageMovie() {
+        return URL_BASE_FOR_IMAGE_MOVIE;
+    }
+
+    public static String getBaseYoutubeVideos() {
+        return BASE_YOUTUBE_VIDEOS;
+    }
 }

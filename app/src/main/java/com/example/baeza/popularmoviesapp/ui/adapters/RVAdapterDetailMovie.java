@@ -17,7 +17,7 @@ import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.
 
 public class RVAdapterDetailMovie extends RecyclerView.Adapter<RVAdapterDetailMovie.RecyclerViewHolder> {
 
-    final private  ListItemClickListener mOnClickListener;
+    final private ListItemClickListener mOnClickListener;
     Context context;
     MovieTrailer mMovieTrailer;
 
@@ -39,7 +39,7 @@ public class RVAdapterDetailMovie extends RecyclerView.Adapter<RVAdapterDetailMo
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        holder.tv_trailer.setText(""+mMovieTrailer.getResults().get(position).getSize());
+        holder.tv_trailer.setText("" + mMovieTrailer.getResults().get(position).getSize());
     }
 
     @Override
@@ -47,24 +47,25 @@ public class RVAdapterDetailMovie extends RecyclerView.Adapter<RVAdapterDetailMo
         return mMovieTrailer.getResults().size();
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-    ImageView arrow;
-    TextView tv_trailer;
-    public RecyclerViewHolder(View itemView) {
-        super(itemView);
-        tv_trailer = itemView.findViewById(R.id.tv_trailer);
-        itemView.setOnClickListener(this);
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        ImageView arrow;
+        TextView tv_trailer;
+
+        public RecyclerViewHolder(View itemView) {
+            super(itemView);
+            tv_trailer = itemView.findViewById(R.id.tv_trailer);
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            int clickedPosition = getAdapterPosition();
+            mOnClickListener.onListItemClick(clickedPosition);
+        }
     }
 
-    @Override
-    public void onClick(View view) {
-        int clickedPosition = getAdapterPosition();
-        mOnClickListener.onListItemClick(clickedPosition);
+    public interface ListItemClickListener {
+        void onListItemClick(int clickedItemIndex);
     }
-}
-
-public interface ListItemClickListener{
-    void onListItemClick(int clickedItemIndex);
-}
 
 }

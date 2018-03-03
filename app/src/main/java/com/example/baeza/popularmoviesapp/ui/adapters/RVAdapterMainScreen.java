@@ -16,13 +16,13 @@ import com.squareup.picasso.Picasso;
  * Created by baeza on 19.02.2018.
  */
 
-public class RVAdapterMainScreen extends  RecyclerView.Adapter<RVAdapterMainScreen.RecyclerViewHolder>{
+public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScreen.RecyclerViewHolder> {
 
     final private ListItemClickListener mOnClickListener;
     Context context;
     MovieRequest mMovieRequest;
 
-    public RVAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest){
+    public RVAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest) {
         mOnClickListener = listener;
         this.context = context;
         mMovieRequest = movieRequest;
@@ -34,7 +34,7 @@ public class RVAdapterMainScreen extends  RecyclerView.Adapter<RVAdapterMainScre
         int layout = R.layout.item_recycler_view;
         LayoutInflater inflater = LayoutInflater.from(context);
 
-        View view = inflater.inflate(layout, parent,false);
+        View view = inflater.inflate(layout, parent, false);
         RecyclerViewHolder viewHolder = new RecyclerViewHolder(view);
 
         return viewHolder;
@@ -43,7 +43,7 @@ public class RVAdapterMainScreen extends  RecyclerView.Adapter<RVAdapterMainScre
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         //String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-        String moviePath = ApiUtils.getUrlBaseForImageMovie()+(
+        String moviePath = ApiUtils.getUrlBaseForImageMovie() + (
                 mMovieRequest.getResults().get(position).getPosterPath());
 
         Picasso.with(context)
@@ -56,21 +56,24 @@ public class RVAdapterMainScreen extends  RecyclerView.Adapter<RVAdapterMainScre
         return mMovieRequest.getResults().size();
     }
 
-    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ImageView imageMovie;
+
         public RecyclerViewHolder(View itemView) {
             super(itemView);
             imageMovie = itemView.findViewById(R.id.leftMovie);
             itemView.setOnClickListener(this);
         }
+
         @Override
         public void onClick(View view) {
             int clickedPosition = getAdapterPosition();
             mOnClickListener.onListItemClick(clickedPosition);
         }
     }
-    public interface  ListItemClickListener{
+
+    public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
     }
 }

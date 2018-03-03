@@ -12,14 +12,15 @@ public class FavoriteMovieContract {
     //The authority, which is how your code knows which Content provider to access.
     public static final String AUTHORITY = "com.example.baeza.popularmoviesapp";
 
-    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" +AUTHORITY);
+    public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + AUTHORITY);
 
     //this is the path for the "movies" directory
     public static final String PATH_MOVIES = "movies";
 
-    private FavoriteMovieContract(){}
+    private FavoriteMovieContract() {
+    }
 
-    public static class FavoriteMovie implements BaseColumns{
+    public static class FavoriteMovie implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
 
