@@ -357,6 +357,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
+
+                Log.d(TAG, ">>>>>> background begins");
+
                 int timeoutMs = 1500;
                 Socket socket = new Socket();
                 SocketAddress socketAddress = new InetSocketAddress("8.8.8.8", 53);
@@ -372,9 +375,14 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         @Override
         protected void onPostExecute(Boolean isConnected) {
+            Log.d(TAG, ">> Boolean is connected "+isConnected);
             if (!isConnected) {
+                showProgressBar(false);
                 tv_error_msg.setText(getString(R.string.no_internet_connection));
+                Log.d(TAG, ">>> no connection to internet");
             }
+            Log.d(TAG, ">>> end background task");
+
         }
     }
 
@@ -391,11 +399,13 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         super.onResume();
         tv_error_msg = findViewById(R.id.tv_error_msg);
 
+        Log.d(TAG, " >>> is network connection"+isNetworkConnection());
         if (!isNetworkConnection()) {
+            showProgressBar(false);
             tv_error_msg.setText(getString(R.string.no_network_connection));
         }
 
-        new InternetCheck();
+        new InternetCheck().execute();
 
     }
 
