@@ -8,9 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -272,5 +274,15 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
                         //insert code here
                     }
                 });
+    }
+
+    private void createTabsAndToolbar(){
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.addTab(tabs.newTab().setText("OVERVIEW"));
+        tabs.addTab(tabs.newTab().setText("TRAILERS"));
+        tabs.addTab(tabs.newTab().setText("REVIEWS"));
     }
 }
