@@ -277,7 +277,7 @@ public class MovieDetailActivity extends AppCompatActivity implements RVAdapterD
     }
 
     private void createTabsAndToolbar(){
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.collapsing_toolbar);
         setSupportActionBar(toolbar);
 
         TabLayout tabs = findViewById(R.id.tabs);

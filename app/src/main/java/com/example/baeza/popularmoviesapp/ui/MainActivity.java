@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
@@ -61,6 +62,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+//        getToolbar();
 
         FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
         mDb = dbHelper.getWritableDatabase();
@@ -147,6 +150,12 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 }
                 break;
             }
+
+            case R.id.detail2:{
+                intentToDetailMovieActivity2();
+                break;
+            }
+
             default: {
             }
         }
@@ -339,6 +348,15 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         startActivity(intent);
     }
 
+    //for test the custom detailed movie page
+    private void intentToDetailMovieActivity2 (){
+        Intent intent = new Intent(MainActivity.this, MovieDetailActivity2.class);
+        startActivity(intent);
+    }
+
+
+
+
     private Cursor getCursorFromClick() {
         try {
             return getContentResolver().query(FavoriteMovieContract.FavoriteMovie.CONTENT_URI,
@@ -408,6 +426,11 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         new InternetCheck().execute();
 
     }
+
+//    private void getToolbar(){
+//        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//    }
 
 //        private void onClickAddFavMovie(View view){
 //           // addNewFavoriteMovie()
