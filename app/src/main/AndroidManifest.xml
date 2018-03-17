@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.example.baeza.popularmoviesapp">
+    package="com.example.baeza.popularmoviesapp">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -15,29 +15,27 @@
 
         <activity android:name=".ui.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.MovieDetailActivity"
-            android:parentActivityName=".ui.MainActivity"/>
-
+            android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"
             android:name=".ui.MovieDetailActivity2"
-            android:parentActivityName=".ui.MainActivity">
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/DetailTheme">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity">
-            </meta-data>
+                android:value=".ui.MainActivity" />
         </activity>
 
         <provider
             android:name=".model.data.contentprovider.MovieContentProvider"
             android:authorities="com.example.baeza.popularmoviesapp"
-            android:exported="false"/>
+            android:exported="false" />
     </application>
 
 </manifest>

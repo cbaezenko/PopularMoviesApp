@@ -28,6 +28,8 @@ public class FavoriteMovieContract {
         public static final String COLUMN_IMAGE_URL_ID = "image";
         public static final String COLUMN_MOVIE_ID = "movie_id";
         public static final String COLUMN_MOVIE_TITLE = "movie_title";
+        public static final String COLUMN_MOVIE_BACKDROP_IMAGE = "backdrop_image";
 
     }
+
 }

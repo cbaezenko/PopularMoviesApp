@@ -151,8 +151,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 break;
             }
 
-            case R.id.detail2:{
-                intentToDetailMovieActivity2();
+            case R.id.detail2: {
+                //intentToDetailMovieActivity2();
                 break;
             }
 
@@ -184,7 +184,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     public void onNext(MovieDetailRequest movieDetailRequest) {
                         showProgressBar(false);
                         mMovieDetailRequest = movieDetailRequest;
-                        intentToDetailMovieActivity(mMovieDetailRequest);
+                        //intentToDetailMovieActivity(mMovieDetailRequest);
+                        intentToDetailMovieActivity2(mMovieDetailRequest);
                     }
                 });
     }
@@ -331,7 +332,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     public void onNext(MovieDetailRequest movieDetailRequest) {
                         showProgressBar(false);
                         mMovieDetailRequest = movieDetailRequest;
-                        intentToDetailMovieActivity(mMovieDetailRequest);
+                        //intentToDetailMovieActivity(mMovieDetailRequest);
+                        intentToDetailMovieActivity2(mMovieDetailRequest);
                     }
                 });
     }
@@ -349,12 +351,18 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     }
 
     //for test the custom detailed movie page
-    private void intentToDetailMovieActivity2 (){
+    private void intentToDetailMovieActivity2(MovieDetailRequest movieDetailRequest) {
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity2.class);
+        intent.putExtra(MovieDetailActivity2.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
+        intent.putExtra(MovieDetailActivity2.OVERVIEW, movieDetailRequest.getOverview());
+        intent.putExtra(MovieDetailActivity2.RUNTIME, movieDetailRequest.getRuntime());
+        intent.putExtra(MovieDetailActivity2.VOTE_AVERAGE, movieDetailRequest.getVoteAverage());
+        intent.putExtra(MovieDetailActivity2.RELEASE_DATE, movieDetailRequest.getReleaseDate());
+        intent.putExtra(MovieDetailActivity2.TITLE_KEY, movieDetailRequest.getTitle());
+        intent.putExtra(MovieDetailActivity2.ID_MOVIE, movieDetailRequest.getId());
+        intent.putExtra(MovieDetailActivity2.BACKDROP_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getBackdropPath());
         startActivity(intent);
     }
-
-
 
 
     private Cursor getCursorFromClick() {
@@ -393,7 +401,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         @Override
         protected void onPostExecute(Boolean isConnected) {
-            Log.d(TAG, ">> Boolean is connected "+isConnected);
+            Log.d(TAG, ">> Boolean is connected " + isConnected);
             if (!isConnected) {
                 showProgressBar(false);
                 tv_error_msg.setText(getString(R.string.no_internet_connection));
@@ -417,7 +425,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         super.onResume();
         tv_error_msg = findViewById(R.id.tv_error_msg);
 
-        Log.d(TAG, " >>> is network connection"+isNetworkConnection());
+        Log.d(TAG, " >>> is network connection" + isNetworkConnection());
         if (!isNetworkConnection()) {
             showProgressBar(false);
             tv_error_msg.setText(getString(R.string.no_network_connection));
@@ -427,10 +435,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     }
 
-//    private void getToolbar(){
-//        setSupportActionBar((android.support.v7.widget.Toolbar) findViewById(R.id.toolbar));
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//    }
 
 //        private void onClickAddFavMovie(View view){
 //           // addNewFavoriteMovie()
