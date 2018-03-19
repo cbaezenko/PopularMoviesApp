@@ -360,7 +360,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         intent.putExtra(MovieDetailActivity2.RELEASE_DATE, movieDetailRequest.getReleaseDate());
         intent.putExtra(MovieDetailActivity2.TITLE_KEY, movieDetailRequest.getTitle());
         intent.putExtra(MovieDetailActivity2.ID_MOVIE, movieDetailRequest.getId());
-        intent.putExtra(MovieDetailActivity2.BACKDROP_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getBackdropPath());
+        intent.putExtra(MovieDetailActivity2.BACKDROP_PATH, ApiUtils.getUrlBackdropImage()+ movieDetailRequest.getBackdropPath());
         startActivity(intent);
     }
 

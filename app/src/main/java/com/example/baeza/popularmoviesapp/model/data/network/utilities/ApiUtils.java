@@ -13,7 +13,9 @@ public class ApiUtils {
     private static final String BASE_URL_MOVIE = "https://api.themoviedb.org/3/movie/";
     private static final String IMAGE_MOVIE_BASE_URL = "http://image.tmdb.org/t/p/";
     private static final String RECOMMENDED_SIZE_MOBILE = "w185/";
+    private static final String SIZE_BACKDROP = "w342/";
     private final static String URL_BASE_FOR_IMAGE_MOVIE = IMAGE_MOVIE_BASE_URL + RECOMMENDED_SIZE_MOBILE;
+    private final static String URL_BACKDROP_IMAGE = IMAGE_MOVIE_BASE_URL + SIZE_BACKDROP;
 
     private final static String BASE_YOUTUBE_VIDEOS = "http://www.youtube.com/watch?v=";
 
@@ -23,6 +25,10 @@ public class ApiUtils {
 
     public static String getUrlBaseForImageMovie() {
         return URL_BASE_FOR_IMAGE_MOVIE;
+    }
+
+    public static String getUrlBackdropImage() {
+        return URL_BACKDROP_IMAGE;
     }
 
     public static String getBaseYoutubeVideos() {
