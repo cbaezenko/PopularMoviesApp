@@ -2,6 +2,7 @@ package com.example.baeza.popularmoviesapp.ui;
 
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
@@ -46,6 +49,8 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_detail2);
 
+        getExtrasFromIntent();
+
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -55,17 +60,16 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        getExtrasFromIntent();
 
         imageView = findViewById(R.id.image);
         Picasso.with(this).load(backdropPath).into(imageView);
 
         Log.d(TAG, "poster path " + posterPath);
-
-        Log.d(TAG, "backdrop is "+ backdropPath);
+        Log.d(TAG, "backdrop is " + backdropPath);
 
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle(titleMovie);
+
     }
 
     public void getExtrasFromIntent() {
@@ -77,18 +81,26 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         release_date = getIntent().getStringExtra(RELEASE_DATE);
         id = getIntent().getIntExtra(ID_MOVIE, 1);
         backdropPath = getIntent().getStringExtra(BACKDROP_PATH);
+
+        Log.d(TAG, titleMovie +"\n"+
+        overview+"\n"+
+        runtime+"\n"+
+        release_date);
     }
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new OverviewFragment(), "Overview");
+
+        OverviewFragment overviewFragment = new OverviewFragment();
+        overviewFragment.setArguments(bundleOverview());
+
+        adapter.addFragment(overviewFragment, "Overview");
         adapter.addFragment(new ReviewFragment(), "Reviews");
         adapter.addFragment(new TrailerFragment(), "Trailers");
         viewPager.setAdapter(adapter);
-
     }
 
-    static class Adapter extends FragmentPagerAdapter {
+    static class Adapter extends FragmentPagerAdapter  {
 
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -116,7 +128,15 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
-
     }
 
+    private Bundle bundleOverview(){
+        Bundle bundle = new Bundle();
+        bundle.putString(OverviewFragment.TITLE_KEY, titleMovie);
+        bundle.putString(OverviewFragment.OVERVIEW, overview);
+        bundle.putString(OverviewFragment.RELEASE_DATE, release_date);
+        bundle.putString(OverviewFragment.RUNTIME, runtime);
+        bundle.putString(OverviewFragment.VOTE_AVERAGE, voteAverage);
+        return bundle;
+    }
 }
