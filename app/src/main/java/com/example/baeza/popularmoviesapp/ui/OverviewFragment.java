@@ -29,13 +29,11 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
 
     private static final String TAG = "OverviewFragment";
 
-
     ImageButton favoriteButton;
     TextView tv_overview;
     TextView tv_runtime;
     TextView tv_voteAverage;
     TextView tv_year;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -49,11 +47,6 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
         initLayoutComponents(view);
 
-        String dummyText = "\n"+ "gdasghdasdaudiasjdas dhiashdas dasindjasd "+
-                "\n" + "hdauisdh8a yhdashdias hdashdasds nkasdkasd  dbhjaisdhias oadjoasd" +
-                "dnjasoidjas jdoas das jdoasjdas d doasjdoas dasd jdoasd ad" +
-                "jodasd asdjoas djoaisdj asd jodasjdoad ojdasodjas jodasjd";
-
         String runtime = getArguments().getString(RUNTIME);
         String year = getArguments().getString(RELEASE_DATE);
         String overview = getArguments().getString(OVERVIEW);
@@ -62,7 +55,7 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         tv_voteAverage.setText(voteAverage);
         tv_runtime.setText(runtime);
         tv_year.setText(year);
-        tv_overview.setText(overview +dummyText);
+        tv_overview.setText(overview);
 
         return view;
     }
