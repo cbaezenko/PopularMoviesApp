@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
 
 /**
  * Created by baeza on 20.03.2018.
@@ -16,9 +17,11 @@ import com.example.baeza.popularmoviesapp.R;
 public class RVAdapterReview extends RecyclerView.Adapter<RVAdapterReview.RVReviewViewHolder> {
 
     Context context;
+    MovieReview mMovieReview;
 
-    public RVAdapterReview(Context context) {
+    public RVAdapterReview(Context context, MovieReview movieReview) {
         this.context = context;
+        mMovieReview = movieReview;
     }
 
     @Override
@@ -34,11 +37,19 @@ public class RVAdapterReview extends RecyclerView.Adapter<RVAdapterReview.RVRevi
 
     @Override
     public void onBindViewHolder(RVReviewViewHolder holder, int position) {
+
+        if (mMovieReview != null) {
+            holder.tv_author.setText(mMovieReview.getResults().get(position).getAuthor());
+            holder.tv_content.setText(mMovieReview.getResults().get(position).getContent());
+        }
     }
 
     @Override
     public int getItemCount() {
-        return 8;
+        if (mMovieReview != null)
+            return mMovieReview.getResults().size();
+        else
+            return 1;
     }
 
     public class RVReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

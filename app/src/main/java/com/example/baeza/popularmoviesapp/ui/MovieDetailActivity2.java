@@ -16,10 +16,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
+import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by baeza on 13.03.2018.
@@ -40,6 +47,8 @@ public class MovieDetailActivity2 extends AppCompatActivity {
     private int id;
 
     ImageView imageView;
+    private MovieTrailer mMovieTrailer;
+    private MovieReview mMovieReview;
     CollapsingToolbarLayout collapsingToolbarLayout;
 
     private final static String TAG = "MovieDetailActivity2";
@@ -70,6 +79,8 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle(titleMovie);
 
+//        getInfo(id, getString(R.string.key_movies));
+
     }
 
     public void getExtrasFromIntent() {
@@ -82,10 +93,10 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         id = getIntent().getIntExtra(ID_MOVIE, 1);
         backdropPath = getIntent().getStringExtra(BACKDROP_PATH);
 
-        Log.d(TAG, titleMovie +"\n"+
-        overview+"\n"+
-        runtime+"\n"+
-        release_date);
+        Log.d(TAG, titleMovie + "\n" +
+                overview + "\n" +
+                runtime + "\n" +
+                release_date);
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -95,12 +106,17 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         overviewFragment.setArguments(bundleOverview());
 
         adapter.addFragment(overviewFragment, "Overview");
-        adapter.addFragment(new ReviewFragment(), "Reviews");
+
+        ReviewFragment reviewFragment = new ReviewFragment();
+        reviewFragment.setArguments(bundleReview());
+
+        adapter.addFragment(reviewFragment, "Reviews");
+
         adapter.addFragment(new TrailerFragment(), "Trailers");
         viewPager.setAdapter(adapter);
     }
 
-    static class Adapter extends FragmentPagerAdapter  {
+    static class Adapter extends FragmentPagerAdapter {
 
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -130,7 +146,7 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         }
     }
 
-    private Bundle bundleOverview(){
+    private Bundle bundleOverview() {
         Bundle bundle = new Bundle();
         bundle.putString(OverviewFragment.TITLE_KEY, titleMovie);
         bundle.putString(OverviewFragment.OVERVIEW, overview);
@@ -139,4 +155,58 @@ public class MovieDetailActivity2 extends AppCompatActivity {
         bundle.putString(OverviewFragment.VOTE_AVERAGE, voteAverage);
         return bundle;
     }
+
+    private Bundle bundleReview() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(ReviewFragment.MOVIE_ID, id);
+        return bundle;
+    }
+
+//    private void getInfo(int movie_id, String api_key) {
+//        requestMovieReview(movie_id, api_key);
+//        requestMovieTrailer(movie_id, api_key);
+//    }
+
+
+//    private void requestMovieTrailer(int movie_id, String api_key) {
+//        ApiUtils.getApiService().getMovieTrailer(movie_id, api_key)
+//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<MovieTrailer>() {
+//                    @Override
+//                    public void onCompleted() {
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                    }
+//
+//                    @Override
+//                    public void onNext(MovieTrailer movieTrailer) {
+//                        Log.d(TAG, "movie trailers" + movieTrailer.getResults().toString());
+//                    }
+//                });
+//    }
+
+//    private void requestMovieReview(final int movie_id, String api_key) {
+//        ApiUtils.getApiService().getMovieReview(movie_id, api_key)
+//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<MovieReview>() {
+//                    @Override
+//                    public void onCompleted() {
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable e) {
+//                    }
+//
+//                    @Override
+//                    public void onNext(MovieReview movieReview) {
+//                        Log.d(TAG, "movie review is : " + movieReview.getResults().get(0).getContent());
+//                        //insert code here
+//                        mMovieReview = movieReview;
+//                        bundleReview(movieReview);
+//
+//                    }
+//                });
+//    }
 }
