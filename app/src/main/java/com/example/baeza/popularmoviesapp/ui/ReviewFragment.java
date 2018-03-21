@@ -73,7 +73,7 @@ public class ReviewFragment extends Fragment {
                 });
     }
 
-    public void fillRecycler() {
+    public void fillRecycler(){
         RVAdapterReview rvAdapterReview = new RVAdapterReview(getContext(), mMovieReview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 

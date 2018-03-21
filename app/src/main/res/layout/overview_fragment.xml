@@ -84,8 +84,7 @@
                             android:layout_marginTop="8dp"
                             android:adjustViewBounds="true"
                             android:background="@android:color/transparent"
-                            android:fontFamily="sans-serif"
-                            app:srcCompat="@drawable/ic_favorite_black_24dp"/>
+                            android:fontFamily="sans-serif"/>
 
                     </LinearLayout>
                 </LinearLayout>
