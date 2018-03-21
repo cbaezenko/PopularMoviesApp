@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.baeza.popularmoviesapp.R;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
 
 /**
  * Created by baeza on 20.03.2018.
@@ -17,9 +18,11 @@ import com.example.baeza.popularmoviesapp.R;
 public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTrailerViewHolder> {
 
     Context context;
+    MovieTrailer mMovieTrailer;
 
-    public RVAdapterTrailer(Context context) {
+    public RVAdapterTrailer(Context context, MovieTrailer movieTrailer) {
     this.context = context;
+    mMovieTrailer = movieTrailer;
     }
 
     @Override
@@ -40,7 +43,8 @@ public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTr
 
     @Override
     public int getItemCount() {
-        return 8;
+        if(mMovieTrailer!=null) return mMovieTrailer.getResults().size();
+        else return 1;
     }
 
     public class RVTrailerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

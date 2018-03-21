@@ -25,12 +25,18 @@ import rx.schedulers.Schedulers;
 
 public class TrailerFragment extends Fragment {
 
+    private RecyclerView mRecyclerView;
+    public static final String MOVIE_ID = "movie_id";
+    private int movie_id;
+    private MovieTrailer mMovieTrailer;
     private static final String TAG = "TrailerFragment";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        requestMovieTrailer();
+
+        movie_id = getArguments().getInt(MOVIE_ID);
+        requestMovieTrailer(movie_id, getString(R.string.key_movies));
 
     }
 
@@ -39,17 +45,11 @@ public class TrailerFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        RecyclerView recyclerView = new RecyclerView(getContext());
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView = new RecyclerView(getContext());
 
-        RVAdapterTrailer rvAdapterTrailer = new RVAdapterTrailer(getContext());
+        fillRecycler();
 
-        recyclerView.setAdapter(rvAdapterTrailer);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(layoutManager);
-
-
-        return recyclerView;
+        return mRecyclerView;
     }
 
 
@@ -68,7 +68,18 @@ public class TrailerFragment extends Fragment {
                     @Override
                     public void onNext(MovieTrailer movieTrailer) {
                         Log.d(TAG, "movie trailers" + movieTrailer.getResults().toString());
+                        mMovieTrailer = movieTrailer;
+                        fillRecycler();
                     }
                 });
+    }
+
+    private void fillRecycler() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RVAdapterTrailer rvAdapterTrailer = new RVAdapterTrailer(getContext(), mMovieTrailer);
+
+        mRecyclerView.setAdapter(rvAdapterTrailer);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(layoutManager);
     }
 }
