@@ -25,7 +25,11 @@ public class FavoriteMovieDBHelper extends SQLiteOpenHelper {
                 FavoriteMovieContract.FavoriteMovie._ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID + " INTEGER NOT NULL, " +
                 FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID + " TEXT NOT NULL, " +
-                FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE + " TEXT NOT NULL," +
+                FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE + " TEXT NOT NULL, " +
+                FavoriteMovieContract.FavoriteMovie.COLUMN_RELEASE_DATE + " TEXT NOT NULL, " +
+                FavoriteMovieContract.FavoriteMovie.COLUMN_USER_RATING + " DOUBLE NOT NULL, " +
+                FavoriteMovieContract.FavoriteMovie.COLUMN_RUNTIME + " INTEGER NOT NULL, " +
+                FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_OVERVIEW + " TEXT NOT NULL, "+
                 FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_BACKDROP_IMAGE + " TEXT NOT NULL"+
                 ");";
 

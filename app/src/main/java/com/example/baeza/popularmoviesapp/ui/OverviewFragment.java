@@ -36,6 +36,7 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     public final static String RELEASE_DATE = "release_date";
     public final static String MOVIE_ID = "id";
     public final static String POSTER_PATH = "poster_path";
+    public final static String BACKDROP_PATH = "backdrop_path";
 
     private SQLiteDatabase mDb;
     private static final String TAG = "OverviewFragment";
@@ -43,7 +44,7 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     ImageView ivPoster;
     ImageButton favoriteButton;
     TextView tv_overview, tv_runtime, tv_voteAverage, tv_year, tv_minutes;
-    String title, runtime, year, overview, voteAverage, poster_path;
+    String title, runtime, year, overview, voteAverage, poster_path, backdrop_path;
     int id;
 
     @Override
@@ -65,6 +66,7 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         voteAverage = getArguments().getString(VOTE_AVERAGE);
         poster_path = getArguments().getString(POSTER_PATH);
         id = getArguments().getInt(MOVIE_ID);
+        backdrop_path = getArguments().getString(BACKDROP_PATH);
 
         tv_voteAverage.setText(voteAverage);
         tv_runtime.setText(runtime);
@@ -160,7 +162,11 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE, titleMovie);
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, posterPath);
-
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_USER_RATING, Double.valueOf(voteAverage));
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_RELEASE_DATE, year);
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_BACKDROP_IMAGE, backdrop_path );
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_OVERVIEW, overview);
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_RUNTIME, Integer.valueOf(runtime));
             //insert new movie data via a ContentResolver
             Uri uri = getActivity().getContentResolver().insert(FavoriteMovieContract.FavoriteMovie.CONTENT_URI, contentValues);
             if (uri != null) {

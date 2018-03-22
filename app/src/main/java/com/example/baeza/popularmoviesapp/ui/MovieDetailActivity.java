@@ -79,8 +79,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         voteAverage = Double.toString(getIntent().getDoubleExtra(VOTE_AVERAGE, 0.0));
         runtime = Integer.toString(getIntent().getIntExtra(RUNTIME, 0));
         release_date = getIntent().getStringExtra(RELEASE_DATE);
+
         id = getIntent().getIntExtra(ID_MOVIE, 1);
         backdropPath = getIntent().getStringExtra(BACKDROP_PATH);
+
+        Log.d(TAG, "backdrop is "+backdropPath +" \n"+
+        "posterpath is "+posterPath);
+
     }
 
     private void setupViewPager(ViewPager viewPager) {
@@ -140,6 +145,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         bundle.putString(OverviewFragment.VOTE_AVERAGE, voteAverage);
         bundle.putString(OverviewFragment.POSTER_PATH, posterPath);
         bundle.putInt(OverviewFragment.MOVIE_ID, id);
+        bundle.putString(OverviewFragment.BACKDROP_PATH, backdropPath);
         return bundle;
     }
 

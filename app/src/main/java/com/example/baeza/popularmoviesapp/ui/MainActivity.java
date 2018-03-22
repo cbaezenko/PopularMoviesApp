@@ -153,9 +153,22 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         return super.onOptionsItemSelected(item);
     }
 
+    private void readFromContent(int clickedItem) {
+        Cursor cursor = getAllMoviesFromContent();
+        if (cursor.getCount() != 0) {
+            cursor.moveToPosition(clickedItem);
+            cursor.getCount();
+            Log.d(TAG, "Items in favoreites" + cursor.getCount());
+            Log.d(TAG, "algo mas " + cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE)));
+        }
+    }
+
     @Override
     public void onListItemClick(int clickedItemIndex) {
         showProgressBar(true);
+
+
+//        readFromContent(clickedItemIndex);
 
         ApiUtils.getApiService().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
                 getString(R.string.key_movies))
@@ -290,44 +303,20 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     @Override
     public void onListItemClickContentProvider(int clickedItemIndex) {
+        readFromContent(clickedItemIndex);
         Cursor cursor = getCursorFromClick();
         cursor.moveToPosition(clickedItemIndex);
-        int id = cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID));
         showProgressBar(true);
-        ApiUtils.getApiService().getMovieDetail(id, getString(R.string.key_movies))
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<MovieDetailRequest>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        showProgressBar(false);
-                        showErrorMsg(true);
-                    }
-
-                    @Override
-                    public void onNext(MovieDetailRequest movieDetailRequest) {
-                        showProgressBar(false);
-                        mMovieDetailRequest = movieDetailRequest;
-                        //intentToDetailMovieActivity(mMovieDetailRequest);
-                        intentToDetailMovieActivity2(mMovieDetailRequest);
-                    }
-                });
+        intentMovieActivityFavorites(cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID)),
+                cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_OVERVIEW)),
+                cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_RUNTIME)),
+                cursor.getDouble(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_USER_RATING)),
+                cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_RELEASE_DATE)),
+                cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE)),
+                cursor.getInt(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID)),
+                cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_BACKDROP_IMAGE))
+        );
     }
-
-//    private void intentToDetailMovieActivity(MovieDetailRequest movieDetailRequest) {
-//        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
-//        intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
-//        intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetailRequest.getOverview());
-//        intent.putExtra(MovieDetailActivity.RUNTIME, movieDetailRequest.getRuntime());
-//        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, movieDetailRequest.getVoteAverage());
-//        intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetailRequest.getReleaseDate());
-//        intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
-//        intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
-//        startActivity(intent);
-//    }
 
     //for test the custom detailed movie page
     private void intentToDetailMovieActivity2(MovieDetailRequest movieDetailRequest) {
@@ -340,6 +329,21 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
         intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
         intent.putExtra(MovieDetailActivity.BACKDROP_PATH, ApiUtils.getUrlBackdropImage() + movieDetailRequest.getBackdropPath());
+        startActivity(intent);
+    }
+
+    private void intentMovieActivityFavorites(String poster_path, String overview, int runtime, double voteAverage, String release_date,
+                                              String title, int id_movie, String backdrop_path) {
+
+        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+        intent.putExtra(MovieDetailActivity.POSTER_PATH, poster_path);
+        intent.putExtra(MovieDetailActivity.OVERVIEW, overview);
+        intent.putExtra(MovieDetailActivity.RUNTIME, runtime);
+        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, voteAverage);
+        intent.putExtra(MovieDetailActivity.RELEASE_DATE, release_date);
+        intent.putExtra(MovieDetailActivity.TITLE_KEY, title);
+        intent.putExtra(MovieDetailActivity.ID_MOVIE, id_movie);
+        intent.putExtra(MovieDetailActivity.BACKDROP_PATH, backdrop_path);
         startActivity(intent);
     }
 
