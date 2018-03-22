@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
@@ -98,6 +99,10 @@ public class TrailerFragment extends Fragment implements  RVAdapterTrailer.ListI
 
         Log.d(TAG, "video key is "+video_key);
         showTrailer(video_key);
+
+        if(clickedItemIndex == R.id.shareButton){
+            Toast.makeText(getContext(), "selected", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
@@ -110,4 +115,6 @@ public class TrailerFragment extends Fragment implements  RVAdapterTrailer.ListI
             startActivity(chooser);
         }
     }
+
+
 }
