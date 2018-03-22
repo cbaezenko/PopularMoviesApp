@@ -13,12 +13,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
+import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by baeza on 16.03.2018.
@@ -38,11 +40,11 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     private SQLiteDatabase mDb;
     private static final String TAG = "OverviewFragment";
 
+    ImageView ivPoster;
     ImageButton favoriteButton;
-    TextView tv_overview, tv_runtime, tv_voteAverage, tv_year;
+    TextView tv_overview, tv_runtime, tv_voteAverage, tv_year, tv_minutes;
     String title, runtime, year, overview, voteAverage, poster_path;
     int id;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,10 +68,13 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
 
         tv_voteAverage.setText(voteAverage);
         tv_runtime.setText(runtime);
-        tv_year.setText(year);
+        tv_year.setText(getOnlyYear(year));
         tv_overview.setText(overview);
 
+        tv_minutes.setText(getString(R.string.minutes));
+
         setButtonFav();
+        setImagePoster(poster_path);
 
         return view;
     }
@@ -80,7 +85,15 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         tv_runtime = view.findViewById(R.id.runtime);
         tv_voteAverage = view.findViewById(R.id.voteAverage);
         tv_year = view.findViewById(R.id.year);
+
+        tv_minutes = view.findViewById(R.id.tv_minutes);
+
+        ivPoster = view.findViewById(R.id.iv_poster);
         favoriteButton.setOnClickListener(this);
+    }
+
+    private void setImagePoster(String poster_path) {
+        Picasso.with(getContext()).load(poster_path).into(ivPoster);
     }
 
     @Override
@@ -178,5 +191,10 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     private void showSnackBar(String text) {
         Snackbar snackbar = Snackbar.make(getView(), text, Snackbar.LENGTH_SHORT);
         snackbar.show();
+    }
+
+    private String getOnlyYear(String release_date) {
+        String yearRelease = release_date.substring(0, 4);
+        return yearRelease;
     }
 }

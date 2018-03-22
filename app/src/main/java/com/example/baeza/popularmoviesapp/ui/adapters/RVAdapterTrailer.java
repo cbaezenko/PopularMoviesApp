@@ -19,10 +19,12 @@ public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTr
 
     Context context;
     MovieTrailer mMovieTrailer;
+    final private ListItemClickListener mListItemClickListener;
 
-    public RVAdapterTrailer(Context context, MovieTrailer movieTrailer) {
-    this.context = context;
-    mMovieTrailer = movieTrailer;
+    public RVAdapterTrailer(Context context, MovieTrailer movieTrailer, ListItemClickListener listItemClickListener) {
+        this.context = context;
+        mMovieTrailer = movieTrailer;
+        mListItemClickListener = listItemClickListener;
     }
 
     @Override
@@ -33,17 +35,19 @@ public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTr
         View view = layoutInflater.inflate(layout, parent, false);
         RVTrailerViewHolder rvAdapterTrailer = new RVTrailerViewHolder(view);
 
-        return  rvAdapterTrailer;
+        return rvAdapterTrailer;
     }
 
     @Override
     public void onBindViewHolder(RVTrailerViewHolder holder, int position) {
-
+        if (mMovieTrailer != null) {
+            holder.tv_trailer.setText(mMovieTrailer.getResults().get(position).getName());
+        }
     }
 
     @Override
     public int getItemCount() {
-        if(mMovieTrailer!=null) return mMovieTrailer.getResults().size();
+        if (mMovieTrailer != null) return mMovieTrailer.getResults().size();
         else return 1;
     }
 
@@ -55,11 +59,13 @@ public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTr
             super(itemView);
             mImageView = itemView.findViewById(R.id.imageView);
             tv_trailer = itemView.findViewById(R.id.tv_trailer);
+            itemView.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View view) {
-
+            int clickedPosition = getAdapterPosition();
+            mListItemClickListener.onListItemClick(clickedPosition);
         }
     }
 

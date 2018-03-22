@@ -18,7 +18,6 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
@@ -33,7 +32,6 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
-import java.util.function.Consumer;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -62,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-//        getToolbar();
 
         FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
         mDb = dbHelper.getWritableDatabase();
@@ -139,20 +135,13 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             }
             case R.id.favorites: {
                 try {
-//                    Cursor cursor = getAllMovies();
                     Cursor cursor = getAllMoviesFromContent();
-
                     mRecyclerView.removeAllViews();
                     populateUIRecyclerViewDataBase(cursor);
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.d(TAG, "EXCEPTION HERE");
                 }
-                break;
-            }
-
-            case R.id.detail2: {
-                //intentToDetailMovieActivity2();
                 break;
             }
 
@@ -184,7 +173,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     public void onNext(MovieDetailRequest movieDetailRequest) {
                         showProgressBar(false);
                         mMovieDetailRequest = movieDetailRequest;
-                        //intentToDetailMovieActivity(mMovieDetailRequest);
                         intentToDetailMovieActivity2(mMovieDetailRequest);
                     }
                 });
@@ -270,27 +258,12 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                         });
                 break;
             }
-
             default: {
                 //do nothing
             }
         }
     }
 
-    //Hacerlo en un RX
-//        private Cursor getAllMovies(){
-//            return mDb.query(
-//                    FavoriteMovieContract.FavoriteMovie.TABLE_NAME,
-//                    null,
-//                    null,
-//                    null,
-//                    null,
-//                    null,
-//                    null);
-//        }
-
-
-    //Hacerlo en un RX
     private Cursor getAllMoviesFromContent() {
         try {
             return getContentResolver().query(FavoriteMovieContract.FavoriteMovie.CONTENT_URI,
@@ -338,7 +311,20 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 });
     }
 
-    private void intentToDetailMovieActivity(MovieDetailRequest movieDetailRequest) {
+//    private void intentToDetailMovieActivity(MovieDetailRequest movieDetailRequest) {
+//        Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
+//        intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
+//        intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetailRequest.getOverview());
+//        intent.putExtra(MovieDetailActivity.RUNTIME, movieDetailRequest.getRuntime());
+//        intent.putExtra(MovieDetailActivity.VOTE_AVERAGE, movieDetailRequest.getVoteAverage());
+//        intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetailRequest.getReleaseDate());
+//        intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
+//        intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
+//        startActivity(intent);
+//    }
+
+    //for test the custom detailed movie page
+    private void intentToDetailMovieActivity2(MovieDetailRequest movieDetailRequest) {
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
         intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
         intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetailRequest.getOverview());
@@ -347,20 +333,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         intent.putExtra(MovieDetailActivity.RELEASE_DATE, movieDetailRequest.getReleaseDate());
         intent.putExtra(MovieDetailActivity.TITLE_KEY, movieDetailRequest.getTitle());
         intent.putExtra(MovieDetailActivity.ID_MOVIE, movieDetailRequest.getId());
-        startActivity(intent);
-    }
-
-    //for test the custom detailed movie page
-    private void intentToDetailMovieActivity2(MovieDetailRequest movieDetailRequest) {
-        Intent intent = new Intent(MainActivity.this, MovieDetailActivity2.class);
-        intent.putExtra(MovieDetailActivity2.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
-        intent.putExtra(MovieDetailActivity2.OVERVIEW, movieDetailRequest.getOverview());
-        intent.putExtra(MovieDetailActivity2.RUNTIME, movieDetailRequest.getRuntime());
-        intent.putExtra(MovieDetailActivity2.VOTE_AVERAGE, movieDetailRequest.getVoteAverage());
-        intent.putExtra(MovieDetailActivity2.RELEASE_DATE, movieDetailRequest.getReleaseDate());
-        intent.putExtra(MovieDetailActivity2.TITLE_KEY, movieDetailRequest.getTitle());
-        intent.putExtra(MovieDetailActivity2.ID_MOVIE, movieDetailRequest.getId());
-        intent.putExtra(MovieDetailActivity2.BACKDROP_PATH, ApiUtils.getUrlBackdropImage()+ movieDetailRequest.getBackdropPath());
+        intent.putExtra(MovieDetailActivity.BACKDROP_PATH, ApiUtils.getUrlBackdropImage() + movieDetailRequest.getBackdropPath());
         startActivity(intent);
     }
 
@@ -378,14 +351,10 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         }
     }
 
-
     class InternetCheck extends AsyncTask<Void, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Void... voids) {
             try {
-
-                Log.d(TAG, ">>>>>> background begins");
-
                 int timeoutMs = 1500;
                 Socket socket = new Socket();
                 SocketAddress socketAddress = new InetSocketAddress("8.8.8.8", 53);
@@ -408,7 +377,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 Log.d(TAG, ">>> no connection to internet");
             }
             Log.d(TAG, ">>> end background task");
-
         }
     }
 
@@ -432,18 +400,5 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         }
 
         new InternetCheck().execute();
-
     }
-
-
-//        private void onClickAddFavMovie(View view){
-//           // addNewFavoriteMovie()
-//        }
-//
-//        private long addNewFavoriteMovie(int id, String poster_path){
-//            ContentValues cv = new ContentValues();
-//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_ID, id);
-//            cv.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID,poster_path);
-//            return mDb.insert(FavoriteMovieContract.FavoriteMovie.TABLE_NAME, null, cv);
-//        }
 }

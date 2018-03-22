@@ -22,9 +22,6 @@
         </activity>
         <activity
             android:name=".ui.MovieDetailActivity"
-            android:parentActivityName=".ui.MainActivity" />
-        <activity
-            android:name=".ui.MovieDetailActivity2"
             android:parentActivityName=".ui.MainActivity"
             android:theme="@style/DetailTheme">
             <meta-data

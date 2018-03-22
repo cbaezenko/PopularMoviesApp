@@ -3,6 +3,7 @@ package com.example.baeza.popularmoviesapp.ui;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -31,6 +32,8 @@ public class ReviewFragment extends Fragment {
 
     private MovieReview mMovieReview;
     RecyclerView mRecyclerView;
+    DividerItemDecoration mDividerItemDecoration;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -80,5 +83,10 @@ public class ReviewFragment extends Fragment {
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(rvAdapterReview);
+
+        //adding divider lines between recyclerview items
+        mDividerItemDecoration = new DividerItemDecoration(
+                mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        mRecyclerView.addItemDecoration(mDividerItemDecoration);
     }
 }
