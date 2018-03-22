@@ -42,6 +42,9 @@ public class RVAdapterReview extends RecyclerView.Adapter<RVAdapterReview.RVRevi
             holder.tv_author.setText(mMovieReview.getResults().get(position).getAuthor());
             holder.tv_content.setText(mMovieReview.getResults().get(position).getContent());
         }
+        if (mMovieReview == null) {
+            holder.tv_content.setText(context.getString(R.string.no_reviews));
+        }
     }
 
     @Override

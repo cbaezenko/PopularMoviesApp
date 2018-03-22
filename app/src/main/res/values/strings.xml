@@ -13,6 +13,8 @@
     <string name="show_youtube">Open in YoutubeApp</string>
     <string name="show_inside">Open in Browser</string>
 
+    <string name="no_reviews">No reviews for this film</string>
+
     <string name="minutes">min</string>
     <string name="vote_average_design">/10</string>
 

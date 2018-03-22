@@ -136,7 +136,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             case R.id.favorites: {
                 try {
                     Cursor cursor = getAllMoviesFromContent();
-                    mRecyclerView.removeAllViews();
+                    if (mRecyclerView != null) {
+                        mRecyclerView.removeAllViews();
+                    }
                     populateUIRecyclerViewDataBase(cursor);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -223,6 +225,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
                             @Override
                             public void onNext(MovieRequest movieRequest) {
+                                tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest = movieRequest;
@@ -251,6 +254,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
                             @Override
                             public void onNext(MovieRequest movieRequest) {
+                                tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
                                 populateUIwithRecyclerViewRetro(movieRequest);
                                 mMovieRequest = movieRequest;
@@ -266,6 +270,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private Cursor getAllMoviesFromContent() {
         try {
+            tv_error_msg.setVisibility(View.INVISIBLE);
+
             return getContentResolver().query(FavoriteMovieContract.FavoriteMovie.CONTENT_URI,
                     null,
                     null,
