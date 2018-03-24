@@ -27,6 +27,7 @@ import com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail.M
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterMainScreenDB;
+import com.example.baeza.popularmoviesapp.ui.helper.EndlessRecyclerViewScrollListener;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -42,19 +43,22 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     private final static String TAG = "MainActivity";
     private static final String INFO_TO_KEEP = "info";
     public static final int POPULAR = 1, TOP_RATED = 2;
-    ProgressBar progressBar;
+    private ProgressBar progressBar;
     private SQLiteDatabase mDb;
 
     private MovieRequest mMovieRequest;
     private MovieDetailRequest mMovieDetailRequest;
 
-    TextView tv_error_msg;
+    private EndlessRecyclerViewScrollListener scrollListener;
 
-    RecyclerView mRecyclerView;
-    RVAdapterMainScreen mRVAdapterMainScreen;
-    RVAdapterMainScreenDB mRVAdapterMainScreenDB;
+    private TextView tv_error_msg;
 
-    RecyclerView.LayoutManager recyclerViewLayoutManager;
+    private RecyclerView mRecyclerView;
+    private RVAdapterMainScreen mRVAdapterMainScreen;
+    private RVAdapterMainScreenDB mRVAdapterMainScreenDB;
+
+    private GridLayoutManager recyclerViewLayoutManager;
+    private int loadPage = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,64 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setAdapter(mRVAdapterMainScreen);
+
+        /////////////////testing endless reycler view
+
+        scrollListener = new EndlessRecyclerViewScrollListener(recyclerViewLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                loadPage++;
+                Log.d(TAG, "inside on LoadMore :"
+                        + "\npage " + page
+                        + "\ntotalItemsCount" + totalItemsCount
+                        + "\nview " + view.toString());
+
+                loadData(loadPage);
+            }
+        };
+
+        mRecyclerView.addOnScrollListener(scrollListener);
+        //////////////////////
+
     }
+
+    ///////////////test for endless
+    private void loadData(int loadPage) {
+        Log.d(TAG, "loadPage is : " + loadPage);
+        this.loadPage = loadPage;
+
+        //if(scrollListener!=null){scrollListener.resetState();}
+
+        ApiUtils.getApiService().getMovieListPopularityPage(getString(R.string.key_movies), loadPage)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<MovieRequest>() {
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        showProgressBar(false);
+                        showErrorMsg(true);
+                    }
+
+                    @Override
+                    public void onNext(MovieRequest movieRequest) {
+                        tv_error_msg.setVisibility(View.INVISIBLE);
+                        showProgressBar(false);
+
+                        mRVAdapterMainScreen.notifyDataSetChanged();
+
+
+                        populateUIwithRecyclerViewRetro(movieRequest);
+                        mMovieRequest = movieRequest;
+
+                        //mRVAdapterMainScreen.notifyChanges();
+                    }
+                });
+
+    }
+ /////////////////////////////////////////////
 
     private void populateUIRecyclerViewDataBase(Cursor cursor) {
         if (mRecyclerView != null) {
@@ -380,13 +441,11 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         @Override
         protected void onPostExecute(Boolean isConnected) {
-            Log.d(TAG, ">> Boolean is connected " + isConnected);
             if (!isConnected) {
                 showProgressBar(false);
                 tv_error_msg.setText(getString(R.string.no_internet_connection));
                 Log.d(TAG, ">>> no connection to internet");
             }
-            Log.d(TAG, ">>> end background task");
         }
     }
 
@@ -403,7 +462,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         super.onResume();
         tv_error_msg = findViewById(R.id.tv_error_msg);
 
-        Log.d(TAG, " >>> is network connection" + isNetworkConnection());
         if (!isNetworkConnection()) {
             showProgressBar(false);
             tv_error_msg.setText(getString(R.string.no_network_connection));

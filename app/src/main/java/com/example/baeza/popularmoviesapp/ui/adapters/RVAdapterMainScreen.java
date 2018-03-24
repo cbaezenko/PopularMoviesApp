@@ -28,6 +28,11 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
         mMovieRequest = movieRequest;
     }
 
+    //testing for the endless
+    public void notifyChanges(){
+        notifyItemRangeInserted(getItemCount()+1, mMovieRequest.getResults().size());
+    }
+
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
