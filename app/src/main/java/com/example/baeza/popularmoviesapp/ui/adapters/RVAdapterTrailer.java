@@ -35,9 +35,8 @@ public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTr
         LayoutInflater layoutInflater = LayoutInflater.from(context);
 
         View view = layoutInflater.inflate(layout, parent, false);
-        RVTrailerViewHolder rvAdapterTrailer = new RVTrailerViewHolder(view);
 
-        return rvAdapterTrailer;
+        return new RVTrailerViewHolder(view);
     }
 
     @Override

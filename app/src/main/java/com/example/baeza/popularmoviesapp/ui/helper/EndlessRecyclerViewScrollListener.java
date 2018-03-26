@@ -33,7 +33,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
     public EndlessRecyclerViewScrollListener(GridLayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
         visibleThreshold = visibleThreshold * layoutManager.getSpanCount();
-        Log.d(TAG, "contador de span en grid layout es :" + layoutManager.getSpanCount());
     }
 
     public EndlessRecyclerViewScrollListener(StaggeredGridLayoutManager layoutManager) {
@@ -67,7 +66,6 @@ public abstract class EndlessRecyclerViewScrollListener extends RecyclerView.OnS
             lastVisibleItemPosition = getLastVisibleItem(lastVisibleItemPositions);
         } else if (mLayoutManager instanceof GridLayoutManager) {
             lastVisibleItemPosition = ((GridLayoutManager) mLayoutManager).findLastVisibleItemPosition();
-            Log.d(TAG, "ultima posicion visible" + lastVisibleItemPosition);
         } else if (mLayoutManager instanceof LinearLayoutManager) {
             lastVisibleItemPosition = ((LinearLayoutManager) mLayoutManager).findLastVisibleItemPosition();
         }

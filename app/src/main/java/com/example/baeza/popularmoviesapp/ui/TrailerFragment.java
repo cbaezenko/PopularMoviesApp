@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,15 +31,13 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
 
     private RecyclerView mRecyclerView;
     public static final String MOVIE_ID = "movie_id";
-    private int movie_id;
     private MovieTrailer mMovieTrailer;
-    private DividerItemDecoration mDividerItemDecoration;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        movie_id = getArguments().getInt(MOVIE_ID);
+        int movie_id = getArguments().getInt(MOVIE_ID);
         requestMovieTrailer(movie_id,
                 BuildConfig.KeyForMovies);
 
@@ -88,9 +85,9 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
         mRecyclerView.setLayoutManager(layoutManager);
 
         //adding divider lines between recyclerview items
-        mDividerItemDecoration = new DividerItemDecoration(
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
-        mRecyclerView.addItemDecoration(mDividerItemDecoration);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 
     @Override

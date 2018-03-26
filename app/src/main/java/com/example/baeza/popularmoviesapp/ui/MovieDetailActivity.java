@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
@@ -37,9 +36,6 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String titleMovie, posterPath, overview, runtime, voteAverage, release_date, backdropPath;
     private int id;
 
-    private ImageView imageView;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-
     private final static String TAG = "MovieDetailActivity";
 
     @Override
@@ -58,13 +54,13 @@ public class MovieDetailActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        imageView = findViewById(R.id.image);
+        ImageView imageView = findViewById(R.id.image);
 
         Picasso.with(this).load(backdropPath).into(imageView);
 
         Log.d(TAG, "poster path " + posterPath);
 
-        collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
+        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
         collapsingToolbarLayout.setTitle(titleMovie);
 
     }
@@ -79,10 +75,6 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         id = getIntent().getIntExtra(ID_MOVIE, 1);
         backdropPath = getIntent().getStringExtra(BACKDROP_PATH);
-
-        Log.d(TAG, "backdrop is " + backdropPath + " \n" +
-                "posterpath is " + posterPath);
-
     }
 
     private void setupViewPager(ViewPager viewPager) {

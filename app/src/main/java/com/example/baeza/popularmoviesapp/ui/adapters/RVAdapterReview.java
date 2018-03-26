@@ -32,8 +32,7 @@ public class RVAdapterReview extends RecyclerView.Adapter<RVAdapterReview.RVRevi
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layout, parent, false);
-        RVReviewViewHolder viewHolder = new RVReviewViewHolder(view);
-        return viewHolder;
+        return new RVReviewViewHolder(view);
     }
 
     @Override

@@ -45,9 +45,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private final static String TAG = "MainActivity";
     private static final String INFO_TO_KEEP = "info";
-    public static final int POPULAR = 1, TOP_RATED = 2, FAVORITE = 3;
-    private ProgressBar progressBar;
-    private SQLiteDatabase mDb;
+    public static final int POPULAR = 1, TOP_RATED = 2;
 
     private MovieRequest mMovieRequest;
     private MovieDetailRequest mMovieDetailRequest;
@@ -58,9 +56,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private RecyclerView mRecyclerView;
     private RVAdapterMainScreen mRVAdapterMainScreen;
-    private RVAdapterMainScreenDB mRVAdapterMainScreenDB;
 
-    private GridLayoutManager recyclerViewLayoutManager;
     private int loadPage = 1;
 
     @Override
@@ -69,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         setContentView(R.layout.activity_main);
 
         FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
-        mDb = dbHelper.getWritableDatabase();
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         createRecyclerView();
 
@@ -83,7 +79,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         } else {
             mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
             mRVAdapterMainScreen.addMovieRequestData(mMovieRequest.getResults());
-            //mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
             mRVAdapterMainScreen.notifyDataSetChanged();
         }
     }
@@ -92,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         mRecyclerView = findViewById(R.id.recyclerView_movies);
 
         //giving to the recycler view the grid appearance
-        recyclerViewLayoutManager = new GridLayoutManager(this, 2);
+        GridLayoutManager recyclerViewLayoutManager = new GridLayoutManager(this, 2);
         mRVAdapterMainScreen = new RVAdapterMainScreen(MainActivity.this, this);
         mRecyclerView.setLayoutManager(recyclerViewLayoutManager);
 
@@ -103,12 +98,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 loadPage++;
-                Log.d(TAG, "inside on LoadMore :"
-                        + "\npage " + page
-                        + "\ntotalItemsCount" + totalItemsCount
-                        + "\nview " + view.toString());
-
-                loadData(loadPage, totalItemsCount);
+                loadData(loadPage);
             }
         };
 
@@ -121,12 +111,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         return true;
     }
 
-    ///////////////test for endless
-    private void loadData(int loadPage, final int totalItemCounts) {
-        Log.d(TAG, "loadPage is : " + loadPage);
+    private void loadData(int loadPage) {
         this.loadPage = loadPage;
-
-//        mRVAdapterMainScreen.clearMovieRequestData();
 
         ApiUtils.getApiService().getMovieListPopularityPage(
                 BuildConfig.KeyForMovies, loadPage)
@@ -139,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     @Override
                     public void onError(Throwable e) {
                         showProgressBar(false);
-                        showErrorMsg(true);
+                        showErrorMsg();
                     }
 
                     @Override
@@ -159,14 +145,13 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 });
 
     }
-    /////////////////////////////////////////////
 
     private void populateUIRecyclerViewDataBase(Cursor cursor) {
         if (mRecyclerView != null) {
             mRecyclerView.removeAllViews();
         }
-        mRVAdapterMainScreenDB = new RVAdapterMainScreenDB(MainActivity.this, MainActivity.this, cursor);
-        mRecyclerView.setAdapter(mRVAdapterMainScreenDB);
+        RVAdapterMainScreenDB RVAdapterMainScreenDB = new RVAdapterMainScreenDB(MainActivity.this, MainActivity.this, cursor);
+        mRecyclerView.setAdapter(RVAdapterMainScreenDB);
     }
 
     @Override
@@ -235,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     @Override
                     public void onError(Throwable e) {
                         showProgressBar(false);
-                        showErrorMsg(true);
+                        showErrorMsg();
                     }
 
                     @Override
@@ -243,13 +228,13 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                         showProgressBar(false);
                         mMovieDetailRequest = movieDetailRequest;
                         mRVAdapterMainScreen.notifyDataSetChanged();
-                        intentToDetailMovieActivity2(mMovieDetailRequest);
+                        intentToDetailMovieActivity(mMovieDetailRequest);
                     }
                 });
     }
 
     private void showProgressBar(boolean isShownProgressBar) {
-        progressBar = findViewById(R.id.progressBar);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
         if (isShownProgressBar) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
@@ -257,8 +242,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         }
     }
 
-    private void showErrorMsg(boolean isShownErrorMsg) {
-        if (isShownErrorMsg) {
+    private void showErrorMsg() {
+        if (true) {
             tv_error_msg.setVisibility(View.VISIBLE);
         } else {
             tv_error_msg.setVisibility(View.INVISIBLE);
@@ -290,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             @Override
                             public void onError(Throwable e) {
                                 showProgressBar(false);
-                                showErrorMsg(true);
+                                showErrorMsg();
                             }
 
                             @Override
@@ -301,7 +286,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                                 mMovieRequest = movieRequest;
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
                                 mRecyclerView.setAdapter(mRVAdapterMainScreen);
-//                                mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
                                 mRVAdapterMainScreen.notifyDataSetChanged();
                             }
                         });
@@ -314,7 +298,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     mMovieRequest = null;
                 }
                 ApiUtils.getApiService().getMovieListRated(
-//                        getString(R.string.key_movies))
                         BuildConfig.KeyForMovies)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieRequest>() {
@@ -325,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             @Override
                             public void onError(Throwable e) {
                                 showProgressBar(false);
-                                showErrorMsg(true);
+                                showErrorMsg();
                             }
 
                             @Override
@@ -333,9 +316,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
 
-                                mRecyclerView.setAdapter(mRVAdapterMainScreen);
                                 mMovieRequest = movieRequest;
-//                                mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
+                                mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
+                                mRecyclerView.setAdapter(mRVAdapterMainScreen);
                                 mRVAdapterMainScreen.notifyDataSetChanged();
                             }
                         });
@@ -385,7 +368,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     }
 
     //for test the custom detailed movie page
-    private void intentToDetailMovieActivity2(MovieDetailRequest movieDetailRequest) {
+    private void intentToDetailMovieActivity(MovieDetailRequest movieDetailRequest) {
         Intent intent = new Intent(MainActivity.this, MovieDetailActivity.class);
         intent.putExtra(MovieDetailActivity.POSTER_PATH, ApiUtils.getUrlBaseForImageMovie() + movieDetailRequest.getPosterPath());
         intent.putExtra(MovieDetailActivity.OVERVIEW, movieDetailRequest.getOverview());

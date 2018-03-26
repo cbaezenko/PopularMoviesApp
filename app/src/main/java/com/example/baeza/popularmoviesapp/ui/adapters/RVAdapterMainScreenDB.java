@@ -35,9 +35,8 @@ public class RVAdapterMainScreenDB extends RecyclerView.Adapter<RVAdapterMainScr
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(layout, parent, false);
-        RecyclerViewHolder viewHolder = new RecyclerViewHolder(view);
 
-        return viewHolder;
+        return new RecyclerViewHolder(view);
     }
 
     @Override

@@ -8,24 +8,18 @@
     <string name="movie_image">Movie Image</string>
     <string name="trailer_movie">Trailer Movie</string>
 
-    <string name="show_youtube">Open in YoutubeApp</string>
-    <string name="show_inside">Open in Browser</string>
-
     <string name="no_reviews">No review available</string>
     <string name="no_trailer">No trailer available</string>
 
+    <string name="content_share_btn">Share Button</string>
     <string name="share_with">Share with:</string>
     <string name="select_app">Select an App:</string>
 
     <string name="minutes">min</string>
-    <string name="vote_average_design">/10</string>
-
-    <string name="trailer_str">Trailer</string>
 
     <string name="show_by_popularity">Order By Popularity</string>
     <string name="show_by_top_rated">Order By Top Rated</string>
 
-    <string name="mark_as_favorite">MARK AS\nFAVORITE</string>
     <string name="error_message">Failed to get results, please try again</string>
 
     <string name="added_to_fav">added to favorites</string>

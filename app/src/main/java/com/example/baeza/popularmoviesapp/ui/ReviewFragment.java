@@ -6,13 +6,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.baeza.popularmoviesapp.BuildConfig;
-import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterReview;
@@ -28,18 +26,16 @@ import rx.schedulers.Schedulers;
 public class ReviewFragment extends Fragment {
 
     public static final String MOVIE_ID = "movie_id";
-    private int movie_id;
 
     private MovieReview mMovieReview;
     private RecyclerView mRecyclerView;
-    private DividerItemDecoration mDividerItemDecoration;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        movie_id = getArguments().getInt(MOVIE_ID);
+        int movie_id = getArguments().getInt(MOVIE_ID);
         requestMovieReview(movie_id,
                 BuildConfig.KeyForMovies);
 
@@ -85,8 +81,8 @@ public class ReviewFragment extends Fragment {
         mRecyclerView.setAdapter(rvAdapterReview);
 
         //adding divider lines between recyclerview items
-        mDividerItemDecoration = new DividerItemDecoration(
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
-        mRecyclerView.addItemDecoration(mDividerItemDecoration);
+        mRecyclerView.addItemDecoration(dividerItemDecoration);
     }
 }

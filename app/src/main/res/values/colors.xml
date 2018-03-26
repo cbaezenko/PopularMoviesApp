@@ -3,7 +3,5 @@
     <color name="colorPrimary">@android:color/black</color>
     <color name="colorPrimaryDark">@android:color/black</color>
     <color name="colorAccent">@android:color/holo_green_light</color>
-    <color name="windowBackground">@android:color/black</color>
 
-    <color name="my_dark_green">#00897B</color>
 </resources>
