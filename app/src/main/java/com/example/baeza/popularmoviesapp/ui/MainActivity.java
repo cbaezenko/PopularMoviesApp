@@ -82,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         } else {
             mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
+            mRVAdapterMainScreen.addMovieRequestData(mMovieRequest.getResults());
             //mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
             mRVAdapterMainScreen.notifyDataSetChanged();
         }
