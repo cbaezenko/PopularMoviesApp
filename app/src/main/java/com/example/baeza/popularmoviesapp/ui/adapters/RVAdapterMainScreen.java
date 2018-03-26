@@ -9,8 +9,12 @@ import android.widget.ImageView;
 
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.Result;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by baeza on 19.02.2018.
@@ -18,6 +22,7 @@ import com.squareup.picasso.Picasso;
 
 public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScreen.RecyclerViewHolder> {
 
+//    private ArrayList<Result> mResults;
     final private ListItemClickListener mOnClickListener;
     private Context context;
     private MovieRequest mMovieRequest;
@@ -31,12 +36,14 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
     public RVAdapterMainScreen( Context context, ListItemClickListener listener){
         this.mOnClickListener = listener;
         this.context = context;
+//        mResults = new ArrayList<>();
     }
 
     //testing for the endless
     public void notifyChanges(){
         notifyItemRangeInserted(getItemCount()+1, mMovieRequest.getResults().size());
     }
+
 
 
     @Override
@@ -69,6 +76,11 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
         else
         return mMovieRequest.getResults().size();
     }
+
+//    public void addMovieRequestData(List<Result> resultList){
+//        mResults.addAll(resultList);
+//        notifyItemRangeInserted(getItemCount()+1, resultList.size());
+//    }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

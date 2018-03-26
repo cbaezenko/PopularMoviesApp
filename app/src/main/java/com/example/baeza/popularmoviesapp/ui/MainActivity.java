@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.baeza.popularmoviesapp.BuildConfig;
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
@@ -125,7 +126,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 //        mRVAdapterMainScreen.notifyDataSetChanged();
 //        scrollListener.resetState();
 
-        ApiUtils.getApiService().getMovieListPopularityPage(getString(R.string.key_movies), loadPage)
+        ApiUtils.getApiService().getMovieListPopularityPage(
+//                getString(R.string.key_movies)
+BuildConfig.KeyForMovies, loadPage)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieRequest>() {
                     @Override
@@ -143,8 +146,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                         tv_error_msg.setVisibility(View.INVISIBLE);
                         showProgressBar(false);
 
+                        mRVAdapterMainScreen.notifyItemRangeInserted(mMovieRequest.getResults().size()+1, movieRequest.getResults().size());
+
                         mMovieRequest = movieRequest;
-                        Log.d(TAG, "se obtiene resultado from load " + movieRequest.getResults().get(1).getTitle());
 
                         mRVAdapterMainScreen.setMovieRequest(movieRequest);
                         mRVAdapterMainScreen.notifyDataSetChanged();
@@ -225,7 +229,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         showProgressBar(true);
 
         ApiUtils.getApiService().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
-                getString(R.string.key_movies))
+                //getString(R.string.key_movies))
+                BuildConfig.KeyForMovies)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieDetailRequest>() {
                     @Override
@@ -279,7 +284,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     mMovieRequest = null;
                 }
                 showProgressBar(true);
-                ApiUtils.getApiService().getMovieListPopularity(getString(R.string.key_movies))
+                ApiUtils.getApiService().getMovieListPopularity(
+//                        getString(R.string.key_movies))
+                        BuildConfig.KeyForMovies)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieRequest>() {
                             @Override
@@ -299,6 +306,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                                 Log.d(TAG, "se recibe respuesta!! " + movieRequest.getResults().get(1).getOriginalLanguage());
 
                                 mMovieRequest = movieRequest;
+//                                mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
                                 mRecyclerView.setAdapter(mRVAdapterMainScreen);
                                 mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
                                 mRVAdapterMainScreen.notifyItemRangeInserted(20,20);
@@ -313,7 +321,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 if (mMovieRequest != null) {
                     mMovieRequest = null;
                 }
-                ApiUtils.getApiService().getMovieListRated(getString(R.string.key_movies))
+                ApiUtils.getApiService().getMovieListRated(
+//                        getString(R.string.key_movies))
+                        BuildConfig.KeyForMovies)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieRequest>() {
                             @Override

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.baeza.popularmoviesapp.BuildConfig;
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.MovieTrailer;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
@@ -40,7 +41,9 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
         super.onCreate(savedInstanceState);
 
         movie_id = getArguments().getInt(MOVIE_ID);
-        requestMovieTrailer(movie_id, getString(R.string.key_movies));
+        requestMovieTrailer(movie_id,
+//                getString(R.string.key_movies));
+                BuildConfig.KeyForMovies);
 
     }
 
