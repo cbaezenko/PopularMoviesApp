@@ -37,10 +37,8 @@ public class MovieDetailActivity extends AppCompatActivity {
     private String titleMovie, posterPath, overview, runtime, voteAverage, release_date, backdropPath;
     private int id;
 
-    ImageView imageView;
-    ImageButton btnFavorite;
-
-    CollapsingToolbarLayout collapsingToolbarLayout;
+    private ImageView imageView;
+    private CollapsingToolbarLayout collapsingToolbarLayout;
 
     private final static String TAG = "MovieDetailActivity";
 
@@ -60,7 +58,6 @@ public class MovieDetailActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
 
-        btnFavorite = findViewById(R.id.btn_mark_favorite);
         imageView = findViewById(R.id.image);
 
         Picasso.with(this).load(backdropPath).into(imageView);
@@ -83,8 +80,8 @@ public class MovieDetailActivity extends AppCompatActivity {
         id = getIntent().getIntExtra(ID_MOVIE, 1);
         backdropPath = getIntent().getStringExtra(BACKDROP_PATH);
 
-        Log.d(TAG, "backdrop is "+backdropPath +" \n"+
-        "posterpath is "+posterPath);
+        Log.d(TAG, "backdrop is " + backdropPath + " \n" +
+                "posterpath is " + posterPath);
 
     }
 

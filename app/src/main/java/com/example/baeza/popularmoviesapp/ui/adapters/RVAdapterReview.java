@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
@@ -16,8 +17,8 @@ import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.M
 
 public class RVAdapterReview extends RecyclerView.Adapter<RVAdapterReview.RVReviewViewHolder> {
 
-    Context context;
-    MovieReview mMovieReview;
+    private Context context;
+    private MovieReview mMovieReview;
 
     public RVAdapterReview(Context context, MovieReview movieReview) {
         this.context = context;
@@ -66,7 +67,7 @@ public class RVAdapterReview extends RecyclerView.Adapter<RVAdapterReview.RVRevi
 
         @Override
         public void onClick(View view) {
-
+            Toast.makeText(view.getContext(), ""+view.getId(), Toast.LENGTH_SHORT).show();
         }
     }
 }

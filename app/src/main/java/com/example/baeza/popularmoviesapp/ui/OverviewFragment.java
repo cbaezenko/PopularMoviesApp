@@ -26,7 +26,6 @@ import com.squareup.picasso.Picasso;
  * Created by baeza on 16.03.2018.
  */
 
-
 public class OverviewFragment extends android.support.v4.app.Fragment implements OnClickListener {
 
     public final static String TITLE_KEY = "title_key";
@@ -39,13 +38,12 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     public final static String BACKDROP_PATH = "backdrop_path";
 
     private SQLiteDatabase mDb;
-    private static final String TAG = "OverviewFragment";
 
-    ImageView ivPoster;
-    ImageButton favoriteButton;
-    TextView tv_overview, tv_runtime, tv_voteAverage, tv_year, tv_minutes;
-    String title, runtime, year, overview, voteAverage, poster_path, backdrop_path;
-    int id;
+    private ImageView ivPoster;
+    private ImageButton favoriteButton;
+    private TextView tv_overview, tv_runtime, tv_voteAverage, tv_year, tv_minutes;
+    private String title, runtime, year, overview, voteAverage, poster_path, backdrop_path;
+    private int id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -147,7 +145,6 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
                     null,
                     null);
         } catch (Exception e) {
-            Log.d(TAG, "failed to asynchronously load data");
             e.printStackTrace();
             return null;
         }
@@ -187,7 +184,6 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         try {
             i = getActivity().getContentResolver().delete(uri, null, null);
         } catch (Exception e) {
-            Log.d(TAG, "exception here ");
             e.printStackTrace();
             i = 0;
         }
@@ -199,8 +195,8 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         snackbar.show();
     }
 
+    @NonNull
     private String getOnlyYear(String release_date) {
-        String yearRelease = release_date.substring(0, 4);
-        return yearRelease;
+        return release_date.substring(0, 4);
     }
 }

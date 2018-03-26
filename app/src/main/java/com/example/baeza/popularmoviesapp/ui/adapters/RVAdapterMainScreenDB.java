@@ -19,8 +19,8 @@ import com.squareup.picasso.Picasso;
 public class RVAdapterMainScreenDB extends RecyclerView.Adapter<RVAdapterMainScreenDB.RecyclerViewHolder> {
 
     final private RVAdapterMainScreenDB.ListItemClickListenerContentProvider mOnClickListener;
-    Context context;
-    Cursor mCursor;
+    private Context context;
+    private Cursor mCursor;
 
     public RVAdapterMainScreenDB(Context context, ListItemClickListenerContentProvider listener, Cursor cursor) {
         mOnClickListener = listener;

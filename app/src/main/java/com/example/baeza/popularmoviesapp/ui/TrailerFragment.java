@@ -27,14 +27,13 @@ import rx.schedulers.Schedulers;
  * Created by baeza on 16.03.2018.
  */
 
-public class TrailerFragment extends Fragment implements  RVAdapterTrailer.ListItemClickListener{
+public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListItemClickListener {
 
     private RecyclerView mRecyclerView;
     public static final String MOVIE_ID = "movie_id";
     private int movie_id;
     private MovieTrailer mMovieTrailer;
-    private static final String TAG = "TrailerFragment";
-    DividerItemDecoration mDividerItemDecoration;
+    private DividerItemDecoration mDividerItemDecoration;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class TrailerFragment extends Fragment implements  RVAdapterTrailer.ListI
 
                     @Override
                     public void onNext(MovieTrailer movieTrailer) {
-                        Log.d(TAG, "movie trailers" + movieTrailer.getResults().toString());
                         mMovieTrailer = movieTrailer;
                         fillRecycler();
                     }
@@ -96,11 +94,8 @@ public class TrailerFragment extends Fragment implements  RVAdapterTrailer.ListI
     @Override
     public void onListItemClick(int clickedItemIndex) {
         String video_key = mMovieTrailer.getResults().get(clickedItemIndex).getKey();
-
-        Log.d(TAG, "video key is "+video_key);
         showTrailer(video_key);
-
-        if(clickedItemIndex == R.id.shareButton){
+        if (clickedItemIndex == R.id.shareButton) {
             Toast.makeText(getContext(), "selected", Toast.LENGTH_SHORT).show();
         }
     }
@@ -110,7 +105,7 @@ public class TrailerFragment extends Fragment implements  RVAdapterTrailer.ListI
         Intent webIntent = new Intent(Intent.ACTION_VIEW);
         webIntent.setData(Uri.parse(ApiUtils.getBaseYoutubeVideos() + video_key));
 
-        Intent chooser = Intent.createChooser(webIntent, "select an app");
+        Intent chooser = Intent.createChooser(webIntent, getString(R.string.select_app));
         if (webIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivity(chooser);
         }

@@ -26,13 +26,12 @@ import rx.schedulers.Schedulers;
 
 public class ReviewFragment extends Fragment {
 
-    private static final String TAG = "ReviewFragment";
     public static final String MOVIE_ID = "movie_id";
     private int movie_id;
 
     private MovieReview mMovieReview;
-    RecyclerView mRecyclerView;
-    DividerItemDecoration mDividerItemDecoration;
+    private RecyclerView mRecyclerView;
+    private DividerItemDecoration mDividerItemDecoration;
 
 
     @Override
@@ -69,7 +68,6 @@ public class ReviewFragment extends Fragment {
 
                     @Override
                     public void onNext(MovieReview movieReview) {
-                        Log.d(TAG, "movie review is : " + movieReview.getResults().get(0).getContent());
                         mMovieReview = movieReview;
                         fillRecycler();
                     }

@@ -19,8 +19,8 @@ import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 
 public class RVAdapterTrailer extends RecyclerView.Adapter<RVAdapterTrailer.RVTrailerViewHolder> {
 
-    Context context;
-    MovieTrailer mMovieTrailer;
+    private Context context;
+    private MovieTrailer mMovieTrailer;
     final private ListItemClickListener mListItemClickListener;
 
     public RVAdapterTrailer(Context context, MovieTrailer movieTrailer, ListItemClickListener listItemClickListener) {

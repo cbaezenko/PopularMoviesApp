@@ -19,13 +19,18 @@ import com.squareup.picasso.Picasso;
 public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScreen.RecyclerViewHolder> {
 
     final private ListItemClickListener mOnClickListener;
-    Context context;
-    MovieRequest mMovieRequest;
+    private Context context;
+    private MovieRequest mMovieRequest;
 
     public RVAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest) {
         mOnClickListener = listener;
         this.context = context;
         mMovieRequest = movieRequest;
+    }
+
+    public RVAdapterMainScreen( Context context, ListItemClickListener listener){
+        this.mOnClickListener = listener;
+        this.context = context;
     }
 
     //testing for the endless
@@ -58,6 +63,10 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
 
     @Override
     public int getItemCount() {
+        if (mMovieRequest==null){
+            return 0;
+        }
+        else
         return mMovieRequest.getResults().size();
     }
 
@@ -80,5 +89,13 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
 
     public interface ListItemClickListener {
         void onListItemClick(int clickedItemIndex);
+    }
+
+    public MovieRequest getMovieRequest() {
+        return mMovieRequest;
+    }
+
+    public void setMovieRequest(MovieRequest movieRequest) {
+        mMovieRequest = movieRequest;
     }
 }

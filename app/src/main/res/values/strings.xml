@@ -17,6 +17,7 @@
     <string name="no_trailer">No trailer available</string>
 
     <string name="share_with">Share with:</string>
+    <string name="select_app">Select an App:</string>
 
     <string name="minutes">min</string>
     <string name="vote_average_design">/10</string>
