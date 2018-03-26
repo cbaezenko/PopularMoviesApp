@@ -23,6 +23,7 @@ import com.example.baeza.popularmoviesapp.BuildConfig;
 import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
+import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.Result;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterMainScreen;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieDetail.MovieDetailRequest;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieList.MovieRequest;
@@ -34,6 +35,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
@@ -80,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
         } else {
             mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
-            mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
+            //mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
             mRVAdapterMainScreen.notifyDataSetChanged();
         }
     }
@@ -123,12 +125,10 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         Log.d(TAG, "loadPage is : " + loadPage);
         this.loadPage = loadPage;
 
-//        mRVAdapterMainScreen.notifyDataSetChanged();
-//        scrollListener.resetState();
+//        mRVAdapterMainScreen.clearMovieRequestData();
 
         ApiUtils.getApiService().getMovieListPopularityPage(
-//                getString(R.string.key_movies)
-BuildConfig.KeyForMovies, loadPage)
+                BuildConfig.KeyForMovies, loadPage)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieRequest>() {
                     @Override
@@ -146,18 +146,14 @@ BuildConfig.KeyForMovies, loadPage)
                         tv_error_msg.setVisibility(View.INVISIBLE);
                         showProgressBar(false);
 
-                        mRVAdapterMainScreen.notifyItemRangeInserted(mMovieRequest.getResults().size()+1, movieRequest.getResults().size());
-
                         mMovieRequest = movieRequest;
 
-                        mRVAdapterMainScreen.setMovieRequest(movieRequest);
+                        mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
                         mRVAdapterMainScreen.notifyDataSetChanged();
-                        //mRVAdapterMainScreen.notifyItemRangeInserted(totalItemCounts, totalItemCounts*2);
-                        scrollListener.resetState();
 
-//                        if (scrollListener != null) {
-//                            scrollListener.resetState();
-//                        }
+                        if (scrollListener != null) {
+                            scrollListener.resetState();
+                        }
                     }
                 });
 
@@ -203,7 +199,6 @@ BuildConfig.KeyForMovies, loadPage)
                     populateUIRecyclerViewDataBase(cursor);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Log.d(TAG, "EXCEPTION HERE");
                 }
                 break;
             }
@@ -219,8 +214,6 @@ BuildConfig.KeyForMovies, loadPage)
         if (cursor.getCount() != 0) {
             cursor.moveToPosition(clickedItem);
             cursor.getCount();
-            Log.d(TAG, "Items in favoreites" + cursor.getCount());
-            Log.d(TAG, "algo mas " + cursor.getString(cursor.getColumnIndex(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_TITLE)));
         }
     }
 
@@ -228,8 +221,9 @@ BuildConfig.KeyForMovies, loadPage)
     public void onListItemClick(int clickedItemIndex) {
         showProgressBar(true);
 
-        ApiUtils.getApiService().getMovieDetail(mMovieRequest.getResults().get(clickedItemIndex).getId(),
-                //getString(R.string.key_movies))
+        List<Result> resultList = mRVAdapterMainScreen.getResults();
+
+        ApiUtils.getApiService().getMovieDetail(resultList.get(clickedItemIndex).getId(),
                 BuildConfig.KeyForMovies)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieDetailRequest>() {
@@ -285,7 +279,6 @@ BuildConfig.KeyForMovies, loadPage)
                 }
                 showProgressBar(true);
                 ApiUtils.getApiService().getMovieListPopularity(
-//                        getString(R.string.key_movies))
                         BuildConfig.KeyForMovies)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Subscriber<MovieRequest>() {
@@ -303,13 +296,11 @@ BuildConfig.KeyForMovies, loadPage)
                             public void onNext(MovieRequest movieRequest) {
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
-                                Log.d(TAG, "se recibe respuesta!! " + movieRequest.getResults().get(1).getOriginalLanguage());
 
                                 mMovieRequest = movieRequest;
-//                                mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
+                                mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
                                 mRecyclerView.setAdapter(mRVAdapterMainScreen);
-                                mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
-                                mRVAdapterMainScreen.notifyItemRangeInserted(20,20);
+//                                mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
                                 mRVAdapterMainScreen.notifyDataSetChanged();
                             }
                         });
@@ -343,7 +334,7 @@ BuildConfig.KeyForMovies, loadPage)
 
                                 mRecyclerView.setAdapter(mRVAdapterMainScreen);
                                 mMovieRequest = movieRequest;
-                                mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
+//                                mRVAdapterMainScreen.setMovieRequest(mMovieRequest);
                                 mRVAdapterMainScreen.notifyDataSetChanged();
                             }
                         });
@@ -457,7 +448,6 @@ BuildConfig.KeyForMovies, loadPage)
             if (!isConnected) {
                 showProgressBar(false);
                 tv_error_msg.setText(getString(R.string.no_internet_connection));
-                Log.d(TAG, ">>> no connection to internet");
             }
         }
     }

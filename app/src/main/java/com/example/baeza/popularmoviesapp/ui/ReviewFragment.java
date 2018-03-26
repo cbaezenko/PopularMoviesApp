@@ -41,7 +41,6 @@ public class ReviewFragment extends Fragment {
 
         movie_id = getArguments().getInt(MOVIE_ID);
         requestMovieReview(movie_id,
-//                getString(R.string.key_movies));
                 BuildConfig.KeyForMovies);
 
     }
@@ -77,7 +76,7 @@ public class ReviewFragment extends Fragment {
                 });
     }
 
-    public void fillRecycler(){
+    public void fillRecycler() {
         RVAdapterReview rvAdapterReview = new RVAdapterReview(getContext(), mMovieReview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 

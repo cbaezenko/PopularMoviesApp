@@ -42,7 +42,6 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
 
         movie_id = getArguments().getInt(MOVIE_ID);
         requestMovieTrailer(movie_id,
-//                getString(R.string.key_movies));
                 BuildConfig.KeyForMovies);
 
     }

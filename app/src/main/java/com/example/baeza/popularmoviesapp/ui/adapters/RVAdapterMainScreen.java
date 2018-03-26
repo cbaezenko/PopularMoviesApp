@@ -22,29 +22,22 @@ import java.util.List;
 
 public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScreen.RecyclerViewHolder> {
 
-//    private ArrayList<Result> mResults;
+    private ArrayList<Result> mResults;
     final private ListItemClickListener mOnClickListener;
     private Context context;
-    private MovieRequest mMovieRequest;
+//    private MovieRequest mMovieRequest;
 
     public RVAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest) {
         mOnClickListener = listener;
         this.context = context;
-        mMovieRequest = movieRequest;
+//        mMovieRequest = movieRequest;
     }
 
-    public RVAdapterMainScreen( Context context, ListItemClickListener listener){
+    public RVAdapterMainScreen(Context context, ListItemClickListener listener) {
         this.mOnClickListener = listener;
         this.context = context;
-//        mResults = new ArrayList<>();
+        mResults = new ArrayList<>();
     }
-
-    //testing for the endless
-    public void notifyChanges(){
-        notifyItemRangeInserted(getItemCount()+1, mMovieRequest.getResults().size());
-    }
-
-
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -60,8 +53,11 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         //String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
+//        String moviePath = ApiUtils.getUrlBaseForImageMovie() + (
+//                mMovieRequest.getResults().get(position).getPosterPath());
+
         String moviePath = ApiUtils.getUrlBaseForImageMovie() + (
-                mMovieRequest.getResults().get(position).getPosterPath());
+                mResults.get(position).getPosterPath());
 
         Picasso.with(context)
                 .load(moviePath)
@@ -70,17 +66,22 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
 
     @Override
     public int getItemCount() {
-        if (mMovieRequest==null){
+
+        if (mResults == null) {
             return 0;
-        }
-        else
-        return mMovieRequest.getResults().size();
+        } else
+            return mResults.size();
     }
 
-//    public void addMovieRequestData(List<Result> resultList){
-//        mResults.addAll(resultList);
-//        notifyItemRangeInserted(getItemCount()+1, resultList.size());
-//    }
+    public void addMovieRequestData(List<Result> resultList) {
+        mResults.addAll(resultList);
+        notifyItemRangeInserted(getItemCount() + 1, resultList.size());
+    }
+
+    public void clearMovieRequestData() {
+        mResults.clear();
+        notifyDataSetChanged();
+    }
 
     public class RecyclerViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -103,11 +104,11 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
         void onListItemClick(int clickedItemIndex);
     }
 
-    public MovieRequest getMovieRequest() {
-        return mMovieRequest;
+    public ArrayList<Result> getResults() {
+        return mResults;
     }
 
-    public void setMovieRequest(MovieRequest movieRequest) {
-        mMovieRequest = movieRequest;
+    public void setResults(ArrayList<Result> results) {
+        mResults = results;
     }
 }
