@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -31,10 +30,9 @@ import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterMainScreenDB;
 import com.example.baeza.popularmoviesapp.ui.helper.EndlessRecyclerViewScrollListener;
 
+import com.example.baeza.popularmoviesapp.ui.helper.InternetCheck;
+
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.List;
 
 import rx.Subscriber;
@@ -52,7 +50,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private EndlessRecyclerViewScrollListener scrollListener;
 
-    private TextView tv_error_msg;
+    public static TextView tv_error_msg;
+
+    static ProgressBar progressBar;
 
     private RecyclerView mRecyclerView;
     private RVAdapterMainScreen mRVAdapterMainScreen;
@@ -68,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
         createRecyclerView();
+
+        progressBar = findViewById(R.id.progressBar);
+
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(INFO_TO_KEEP)) {
             try {
@@ -233,8 +236,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 });
     }
 
-    private void showProgressBar(boolean isShownProgressBar) {
-        ProgressBar progressBar = findViewById(R.id.progressBar);
+    public static void showProgressBar(boolean isShownProgressBar) {
         if (isShownProgressBar) {
             progressBar.setVisibility(View.VISIBLE);
         } else {
@@ -410,32 +412,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         }
     }
 
-    class InternetCheck extends AsyncTask<Void, Void, Boolean> {
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            try {
-                int timeoutMs = 1500;
-                Socket socket = new Socket();
-                SocketAddress socketAddress = new InetSocketAddress("8.8.8.8", 53);
-
-                socket.connect(socketAddress, timeoutMs);
-                socket.close();
-
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Boolean isConnected) {
-            if (!isConnected) {
-                showProgressBar(false);
-                tv_error_msg.setText(getString(R.string.no_internet_connection));
-            }
-        }
-    }
-
     private boolean isNetworkConnection() {
         ConnectivityManager connectivityManager =
                 (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -454,6 +430,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             tv_error_msg.setText(getString(R.string.no_network_connection));
         }
 
-        new InternetCheck().execute();
+        new InternetCheck(this).execute();
     }
 }
