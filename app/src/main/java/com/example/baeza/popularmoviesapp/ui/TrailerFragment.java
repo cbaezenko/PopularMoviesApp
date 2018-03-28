@@ -3,6 +3,7 @@ package com.example.baeza.popularmoviesapp.ui;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -33,14 +34,18 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
     public static final String MOVIE_ID = "movie_id";
     private MovieTrailer mMovieTrailer;
 
+    private static final String BUNDLE_TRAILER_STATE = "bundle_trailer_position";
+    private static final String BUNDLE_TRAILER_CONTENT = "bundle_trailer_content";
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int movie_id = getArguments().getInt(MOVIE_ID);
-        requestMovieTrailer(movie_id,
-                BuildConfig.KeyForMovies);
-
+        if (savedInstanceState == null) {
+            int movie_id = getArguments().getInt(MOVIE_ID);
+            requestMovieTrailer(movie_id,
+                    BuildConfig.KeyForMovies);
+        }
     }
 
     @Override
@@ -49,8 +54,16 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
                              Bundle savedInstanceState) {
 
         mRecyclerView = new RecyclerView(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
 
-        fillRecycler();
+        if (savedInstanceState != null) {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_TRAILER_STATE);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+            mMovieTrailer = savedInstanceState.getParcelable(BUNDLE_TRAILER_CONTENT);
+            fillRecycler(mMovieTrailer);
+        }
 
         return mRecyclerView;
     }
@@ -71,18 +84,15 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
                     @Override
                     public void onNext(MovieTrailer movieTrailer) {
                         mMovieTrailer = movieTrailer;
-                        fillRecycler();
+                        fillRecycler(movieTrailer);
                     }
                 });
     }
 
-    private void fillRecycler() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        RVAdapterTrailer rvAdapterTrailer = new RVAdapterTrailer(getContext(), mMovieTrailer, this);
+    private void fillRecycler(MovieTrailer movieTrailer) {
+        RVAdapterTrailer rvAdapterTrailer = new RVAdapterTrailer(getContext(), movieTrailer, this);
 
         mRecyclerView.setAdapter(rvAdapterTrailer);
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(layoutManager);
 
         //adding divider lines between recyclerview items
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
@@ -110,5 +120,10 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
         }
     }
 
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_TRAILER_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(BUNDLE_TRAILER_CONTENT, mMovieTrailer);
+    }
 }
