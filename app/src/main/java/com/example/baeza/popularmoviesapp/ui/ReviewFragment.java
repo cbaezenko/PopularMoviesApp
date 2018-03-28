@@ -1,6 +1,7 @@
 package com.example.baeza.popularmoviesapp.ui;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DividerItemDecoration;
@@ -29,6 +30,7 @@ public class ReviewFragment extends Fragment {
 
     private MovieReview mMovieReview;
     private RecyclerView mRecyclerView;
+    private LinearLayoutManager layoutManager;
 
 
     @Override
@@ -74,7 +76,7 @@ public class ReviewFragment extends Fragment {
 
     public void fillRecycler() {
         RVAdapterReview rvAdapterReview = new RVAdapterReview(getContext(), mMovieReview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(layoutManager);

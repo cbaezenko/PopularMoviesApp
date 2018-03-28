@@ -1,6 +1,7 @@
 package com.example.baeza.popularmoviesapp.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -38,10 +39,14 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     private final static String TAG = "MovieDetailActivity";
 
+    private AppBarLayout mAppBarLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_detail);
+
+        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
 
         getExtrasFromIntent();
 
