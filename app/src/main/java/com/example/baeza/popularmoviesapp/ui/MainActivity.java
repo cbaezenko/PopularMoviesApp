@@ -2,6 +2,7 @@ package com.example.baeza.popularmoviesapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private final static String TAG = "MainActivity";
     private static final String INFO_TO_KEEP = "info";
+    private static final String STATE = "state";
+
     public static final int POPULAR = 1, TOP_RATED = 2, FAVORITE = 3;
 
     private MovieRequest mMovieRequest;
@@ -58,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     private RVAdapterMainScreen mRVAdapterMainScreen;
 
     private int loadPage = 1;
-    private static int selected = POPULAR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,13 +73,41 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         initUIComponents();
         createRecyclerView();
 
-        if (savedInstanceState == null || !savedInstanceState.containsKey(INFO_TO_KEEP)) {
-            try {
-                getRetrofitAnswer(POPULAR);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (savedInstanceState == null) {
+
+            int selected_preference = read_state_sharedPreference();
+            switch (selected_preference) {
+                case POPULAR: {
+                    try {
+                        getRetrofitAnswer(POPULAR);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case TOP_RATED: {
+                    try {
+                        getRetrofitAnswer(TOP_RATED);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                }
+                case FAVORITE: {
+                    Cursor cursor = getAllMoviesFromContent();
+                    populateUIRecyclerViewDataBase(cursor);
+                    break;
+                }
             }
-        } else {
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        if (savedInstanceState.getInt(STATE) == POPULAR ||
+                savedInstanceState.getInt(STATE) == TOP_RATED) {
             if (savedInstanceState.getParcelable(INFO_TO_KEEP) != null) {
                 mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
                 mRVAdapterMainScreen.addMovieRequestData(mMovieRequest.getResults());
@@ -85,8 +115,12 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             } else {
                 showErrorMsg(true);
             }
+        } else if (savedInstanceState.getInt(STATE) == FAVORITE) {
+            Cursor cursor = getAllMoviesFromContent();
+            populateUIRecyclerViewDataBase(cursor);
         }
     }
+
 
     private void createRecyclerView() {
 
@@ -102,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 loadPage++;
-                loadData(loadPage, selected);
+                loadData(loadPage, read_state_sharedPreference());
             }
         };
 
@@ -139,9 +173,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
 
-
                                 mMovieRequest = movieRequest;
-
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
                                 mRVAdapterMainScreen.notifyDataSetChanged();
 
@@ -173,7 +205,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                                 showProgressBar(false);
 
                                 mMovieRequest = movieRequest;
-
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
                                 mRVAdapterMainScreen.notifyDataSetChanged();
 
@@ -201,7 +232,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         loadPage = 1;
         switch (item.getItemId()) {
             case R.id.popularity: {
-                selected = POPULAR;
+                save_state_sharedPreference(POPULAR);
+//                selected = POPULAR;
                 mRVAdapterMainScreen.clearMovieRequestData();
                 showToast(getString(R.string.show_by_popularity), this);
                 try {
@@ -212,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 break;
             }
             case R.id.top_rared: {
-                selected = TOP_RATED;
+                save_state_sharedPreference(TOP_RATED);
                 mRVAdapterMainScreen.clearMovieRequestData();
                 try {
                     getRetrofitAnswer(TOP_RATED);
@@ -223,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 break;
             }
             case R.id.favorites: {
-                selected = FAVORITE;
+                save_state_sharedPreference(FAVORITE);
                 try {
                     Cursor cursor = getAllMoviesFromContent();
                     if (mRecyclerView != null) {
@@ -299,6 +331,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putParcelable(INFO_TO_KEEP, mMovieRequest);
+        outState.putInt(STATE, read_state_sharedPreference());
         super.onSaveInstanceState(outState);
     }
 
@@ -475,9 +508,24 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         new InternetCheck(this).execute();
     }
 
-    private void initUIComponents(){
+    private void initUIComponents() {
         mRecyclerView = findViewById(R.id.recyclerView_movies);
         progressBar = findViewById(R.id.progressBar);
         tv_error_msg = findViewById(R.id.tv_error_msg);
     }
+
+    private void save_state_sharedPreference(int state) {
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(getString(R.string.preference_movies), state);
+        editor.commit();
+    }
+
+    private int read_state_sharedPreference() {
+        SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
+        int preference_movie = sharedPreferences.getInt(getString(R.string.preference_movies),
+                POPULAR);
+        return preference_movie;
+    }
+
 }
