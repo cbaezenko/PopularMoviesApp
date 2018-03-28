@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
 
     private final static String TAG = "MainActivity";
     private static final String INFO_TO_KEEP = "info";
-    public static final int POPULAR = 1, TOP_RATED = 2;
+    public static final int POPULAR = 1, TOP_RATED = 2, FAVORITE = 3;
 
     private MovieRequest mMovieRequest;
     private MovieDetailRequest mMovieDetailRequest;
@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     private RVAdapterMainScreen mRVAdapterMainScreen;
 
     private int loadPage = 1;
+    private static int selected = POPULAR;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 loadPage++;
-                loadData(loadPage);
+                loadData(loadPage, selected);
             }
         };
 
@@ -114,38 +115,76 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         return true;
     }
 
-    private void loadData(int loadPage) {
+    private void loadData(int loadPage, int selected) {
         this.loadPage = loadPage;
 
-        ApiUtils.getApiService().getMovieListPopularityPage(
-                BuildConfig.KeyForMovies, loadPage)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<MovieRequest>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+        switch (selected) {
+            case POPULAR: {
+                ApiUtils.getApiService().getMovieListPopularityPage(
+                        BuildConfig.KeyForMovies, loadPage)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<MovieRequest>() {
+                            @Override
+                            public void onCompleted() {
+                            }
 
-                    @Override
-                    public void onError(Throwable e) {
-                        showProgressBar(false);
-                        showErrorMsg();
-                    }
+                            @Override
+                            public void onError(Throwable e) {
+                                showProgressBar(false);
+                                showErrorMsg();
+                            }
 
-                    @Override
-                    public void onNext(MovieRequest movieRequest) {
-                        tv_error_msg.setVisibility(View.INVISIBLE);
-                        showProgressBar(false);
+                            @Override
+                            public void onNext(MovieRequest movieRequest) {
+                                tv_error_msg.setVisibility(View.INVISIBLE);
+                                showProgressBar(false);
 
-                        mMovieRequest = movieRequest;
 
-                        mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
-                        mRVAdapterMainScreen.notifyDataSetChanged();
+                                mMovieRequest = movieRequest;
 
-                        if (scrollListener != null) {
-                            scrollListener.resetState();
-                        }
-                    }
-                });
+                                mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
+                                mRVAdapterMainScreen.notifyDataSetChanged();
+
+                                if (scrollListener != null) {
+                                    scrollListener.resetState();
+                                }
+                            }
+                        });
+                break;
+            }
+            case TOP_RATED: {
+                ApiUtils.getApiService().getMovieListTopRatedPage(
+                        BuildConfig.KeyForMovies, loadPage)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Subscriber<MovieRequest>() {
+                            @Override
+                            public void onCompleted() {
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                showProgressBar(false);
+                                showErrorMsg();
+                            }
+
+                            @Override
+                            public void onNext(MovieRequest movieRequest) {
+                                tv_error_msg.setVisibility(View.INVISIBLE);
+                                showProgressBar(false);
+
+                                mMovieRequest = movieRequest;
+
+                                mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
+                                mRVAdapterMainScreen.notifyDataSetChanged();
+
+                                if (scrollListener != null) {
+                                    scrollListener.resetState();
+                                }
+                            }
+                        });
+                break;
+            }
+        }
 
     }
 
@@ -162,6 +201,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         loadPage = 1;
         switch (item.getItemId()) {
             case R.id.popularity: {
+                selected = POPULAR;
+                mRVAdapterMainScreen.clearMovieRequestData();
                 showToast(getString(R.string.show_by_popularity), this);
                 try {
                     getRetrofitAnswer(POPULAR);
@@ -171,6 +212,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 break;
             }
             case R.id.top_rared: {
+                selected = TOP_RATED;
+                mRVAdapterMainScreen.clearMovieRequestData();
                 try {
                     getRetrofitAnswer(TOP_RATED);
                 } catch (IOException e) {
@@ -180,6 +223,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                 break;
             }
             case R.id.favorites: {
+                selected = FAVORITE;
                 try {
                     Cursor cursor = getAllMoviesFromContent();
                     if (mRecyclerView != null) {
@@ -259,6 +303,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     }
 
     private void getRetrofitAnswer(int requestID) throws IOException {
+//        mRVAdapterMainScreen.clearMovieRequestData();
 
         switch (requestID) {
             case POPULAR: {
@@ -284,6 +329,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             public void onNext(MovieRequest movieRequest) {
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
+
+//                                mRVAdapterMainScreen.clearMovieRequestData();
+
 
                                 mMovieRequest = movieRequest;
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
@@ -318,10 +366,15 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
 
+//                                mRVAdapterMainScreen.clearMovieRequestData();
+
+                                Log.d(TAG, "Sin endless Tomando top rated titulo \ntitle" + movieRequest.getResults().get(1).getOriginalTitle()
+                                        + "page " + movieRequest.getPage());
+
                                 mMovieRequest = movieRequest;
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
-                                mRecyclerView.setAdapter(mRVAdapterMainScreen);
                                 mRVAdapterMainScreen.notifyDataSetChanged();
+                                mRecyclerView.setAdapter(mRVAdapterMainScreen);
                             }
                         });
                 break;

@@ -25,6 +25,10 @@ public interface ApiService {
     Observable<MovieRequest> getMovieListPopularityPage(@Query("api_key") String api_key,
                                                         @Query("page") int page);
 
+    @GET("top_rated?api_key")
+    Observable<MovieRequest> getMovieListTopRatedPage(@Query("api_key") String api_key,
+                                                        @Query("page") int page);
+
     @GET("{id}?api_key")
     Observable<MovieDetailRequest> getMovieDetail(@Path("id") int id,
                                                   @Query("api_key") String api_key);
