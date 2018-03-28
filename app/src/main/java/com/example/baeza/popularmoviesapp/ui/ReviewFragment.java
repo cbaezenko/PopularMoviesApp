@@ -30,7 +30,8 @@ public class ReviewFragment extends Fragment {
 
     private MovieReview mMovieReview;
     private RecyclerView mRecyclerView;
-    private LinearLayoutManager layoutManager;
+    private static final String BUNDLE_REVIEW_STATE = "bundle_review";
+    private static final String BUNDLE_CONTENT = "bundle_content";
 
 
     @Override
@@ -38,9 +39,11 @@ public class ReviewFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         int movie_id = getArguments().getInt(MOVIE_ID);
-        requestMovieReview(movie_id,
-                BuildConfig.KeyForMovies);
 
+        if (savedInstanceState == null) {
+            requestMovieReview(movie_id,
+                    BuildConfig.KeyForMovies);
+        }
     }
 
     @Override
@@ -49,8 +52,17 @@ public class ReviewFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         mRecyclerView = new RecyclerView(container.getContext());
-        fillRecycler();
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setHasFixedSize(true);
 
+
+        if (savedInstanceState != null) {
+            Parcelable savedRecyclerLayoutState = savedInstanceState.getParcelable(BUNDLE_REVIEW_STATE);
+            mRecyclerView.getLayoutManager().onRestoreInstanceState(savedRecyclerLayoutState);
+            mMovieReview = savedInstanceState.getParcelable(BUNDLE_CONTENT);
+            fillRecycler(mMovieReview);
+        }
         return mRecyclerView;
     }
 
@@ -69,22 +81,26 @@ public class ReviewFragment extends Fragment {
                     @Override
                     public void onNext(MovieReview movieReview) {
                         mMovieReview = movieReview;
-                        fillRecycler();
+                        fillRecycler(movieReview);
                     }
                 });
     }
 
-    public void fillRecycler() {
-        RVAdapterReview rvAdapterReview = new RVAdapterReview(getContext(), mMovieReview);
-        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+    public void fillRecycler(MovieReview movieReview) {
+        RVAdapterReview rvAdapterReview = new RVAdapterReview(getContext(), movieReview);
 
-        mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setAdapter(rvAdapterReview);
 
         //adding divider lines between recyclerview items
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                 mRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
         mRecyclerView.addItemDecoration(dividerItemDecoration);
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(BUNDLE_REVIEW_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
+        outState.putParcelable(BUNDLE_CONTENT, mMovieReview);
     }
 }
