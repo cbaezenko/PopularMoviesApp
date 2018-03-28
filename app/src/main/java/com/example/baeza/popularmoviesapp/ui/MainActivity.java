@@ -68,10 +68,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
 
+        initUIComponents();
         createRecyclerView();
-
-        progressBar = findViewById(R.id.progressBar);
-
 
         if (savedInstanceState == null || !savedInstanceState.containsKey(INFO_TO_KEEP)) {
             try {
@@ -79,16 +77,18 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         } else {
-            mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
-            mRVAdapterMainScreen.addMovieRequestData(mMovieRequest.getResults());
-            mRVAdapterMainScreen.notifyDataSetChanged();
+            if (savedInstanceState.getParcelable(INFO_TO_KEEP) != null) {
+                mMovieRequest = savedInstanceState.getParcelable(INFO_TO_KEEP);
+                mRVAdapterMainScreen.addMovieRequestData(mMovieRequest.getResults());
+                mRVAdapterMainScreen.notifyDataSetChanged();
+            } else {
+                showErrorMsg(true);
+            }
         }
     }
 
     private void createRecyclerView() {
-        mRecyclerView = findViewById(R.id.recyclerView_movies);
 
         //giving to the recycler view the grid appearance
         GridLayoutManager recyclerViewLayoutManager = new GridLayoutManager(this, 2);
@@ -131,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             @Override
                             public void onError(Throwable e) {
                                 showProgressBar(false);
-                                showErrorMsg();
+                                showErrorMsg(true);
                             }
 
                             @Override
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             @Override
                             public void onError(Throwable e) {
                                 showProgressBar(false);
-                                showErrorMsg();
+                                showErrorMsg(true);
                             }
 
                             @Override
@@ -267,7 +267,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     @Override
                     public void onError(Throwable e) {
                         showProgressBar(false);
-                        showErrorMsg();
+                        showErrorMsg(true);
                     }
 
                     @Override
@@ -288,8 +288,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         }
     }
 
-    private void showErrorMsg() {
-        if (true) {
+    private void showErrorMsg(boolean isShownErrorMsg) {
+        if (isShownErrorMsg) {
             tv_error_msg.setVisibility(View.VISIBLE);
         } else {
             tv_error_msg.setVisibility(View.INVISIBLE);
@@ -303,8 +303,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     }
 
     private void getRetrofitAnswer(int requestID) throws IOException {
-//        mRVAdapterMainScreen.clearMovieRequestData();
-
         switch (requestID) {
             case POPULAR: {
                 if (mMovieRequest != null) {
@@ -322,16 +320,13 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             @Override
                             public void onError(Throwable e) {
                                 showProgressBar(false);
-                                showErrorMsg();
+                                showErrorMsg(true);
                             }
 
                             @Override
                             public void onNext(MovieRequest movieRequest) {
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
-
-//                                mRVAdapterMainScreen.clearMovieRequestData();
-
 
                                 mMovieRequest = movieRequest;
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
@@ -358,18 +353,13 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                             @Override
                             public void onError(Throwable e) {
                                 showProgressBar(false);
-                                showErrorMsg();
+                                showErrorMsg(true);
                             }
 
                             @Override
                             public void onNext(MovieRequest movieRequest) {
                                 tv_error_msg.setVisibility(View.INVISIBLE);
                                 showProgressBar(false);
-
-//                                mRVAdapterMainScreen.clearMovieRequestData();
-
-                                Log.d(TAG, "Sin endless Tomando top rated titulo \ntitle" + movieRequest.getResults().get(1).getOriginalTitle()
-                                        + "page " + movieRequest.getPage());
 
                                 mMovieRequest = movieRequest;
                                 mRVAdapterMainScreen.addMovieRequestData(movieRequest.getResults());
@@ -476,7 +466,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     @Override
     public void onResume() {
         super.onResume();
-        tv_error_msg = findViewById(R.id.tv_error_msg);
 
         if (!isNetworkConnection()) {
             showProgressBar(false);
@@ -484,5 +473,11 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         }
 
         new InternetCheck(this).execute();
+    }
+
+    private void initUIComponents(){
+        mRecyclerView = findViewById(R.id.recyclerView_movies);
+        progressBar = findViewById(R.id.progressBar);
+        tv_error_msg = findViewById(R.id.tv_error_msg);
     }
 }
