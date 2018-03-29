@@ -20,6 +20,10 @@ import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieContract;
 import com.example.baeza.popularmoviesapp.model.data.db.FavoriteMovieDBHelper;
 import com.squareup.picasso.Picasso;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+
 /**
  * Created by baeza on 16.03.2018.
  */
@@ -37,11 +41,24 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
 
     private SQLiteDatabase mDb;
 
-    private ImageView ivPoster;
-    private ImageButton favoriteButton;
-    private TextView tv_overview, tv_runtime, tv_voteAverage, tv_year, tv_minutes;
     private String title, runtime, year, overview, voteAverage, poster_path, backdrop_path;
     private int id;
+    private Unbinder unbinder;
+
+    @BindView(R.id.btn_mark_favorite)
+    ImageButton favoriteButton;
+    @BindView(R.id.iv_poster)
+    ImageView ivPoster;
+    @BindView(R.id.overview)
+    TextView tv_overview;
+    @BindView(R.id.runtime)
+    TextView tv_runtime;
+    @BindView(R.id.voteAverage)
+    TextView tv_voteAverage;
+    @BindView(R.id.year)
+    TextView tv_year;
+    @BindView(R.id.tv_minutes)
+    TextView tv_minutes;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +70,9 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.overview_fragment, container, false);
-        initLayoutComponents(view);
+
+        unbinder = ButterKnife.bind(this, view);
+        favoriteButton.setOnClickListener(this);
 
         title = getArguments().getString(TITLE_KEY);
         runtime = getArguments().getString(RUNTIME);
@@ -77,18 +96,6 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
         return view;
     }
 
-    public void initLayoutComponents(View view) {
-        favoriteButton = view.findViewById(R.id.btn_mark_favorite);
-        tv_overview = view.findViewById(R.id.overview);
-        tv_runtime = view.findViewById(R.id.runtime);
-        tv_voteAverage = view.findViewById(R.id.voteAverage);
-        tv_year = view.findViewById(R.id.year);
-
-        tv_minutes = view.findViewById(R.id.tv_minutes);
-
-        ivPoster = view.findViewById(R.id.iv_poster);
-        favoriteButton.setOnClickListener(this);
-    }
 
     private void setImagePoster(String poster_path) {
         Picasso.with(getContext())
@@ -161,7 +168,7 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_IMAGE_URL_ID, posterPath);
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_USER_RATING, Double.valueOf(voteAverage));
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_RELEASE_DATE, year);
-            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_BACKDROP_IMAGE, backdrop_path );
+            contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_BACKDROP_IMAGE, backdrop_path);
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_MOVIE_OVERVIEW, overview);
             contentValues.put(FavoriteMovieContract.FavoriteMovie.COLUMN_RUNTIME, Integer.valueOf(runtime));
             //insert new movie data via a ContentResolver
@@ -198,5 +205,11 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     @NonNull
     private String getOnlyYear(String release_date) {
         return release_date.substring(0, 4);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        unbinder.unbind();
     }
 }

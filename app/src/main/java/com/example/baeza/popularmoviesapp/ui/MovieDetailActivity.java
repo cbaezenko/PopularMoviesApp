@@ -1,5 +1,6 @@
 package com.example.baeza.popularmoviesapp.ui;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -18,6 +19,10 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by baeza on 13.03.2018.
@@ -34,44 +39,45 @@ public class MovieDetailActivity extends AppCompatActivity {
     public final static String ID_MOVIE = "id";
     public final static String BACKDROP_PATH = "backdrop_path";
 
+    @BindView(R.id.image)
+    ImageView mImageView;
+    @BindView(R.id.viewPager)
+    ViewPager mViewPager;
+    @BindView(R.id.appBarLayout)
+    AppBarLayout mAppBarLayout;
+    @BindView(R.id.collapsing_toolbar)
+    CollapsingToolbarLayout mCollapsingToolbarLayout;
+    @BindView(R.id.tabs)
+    TabLayout mTabLayout;
+
     private String titleMovie, posterPath, overview, runtime, voteAverage, release_date, backdropPath;
     private int id;
-
-    private final static String TAG = "MovieDetailActivity";
-
-    private AppBarLayout mAppBarLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.movie_detail);
 
-        mAppBarLayout = (AppBarLayout) findViewById(R.id.appBarLayout);
+        ButterKnife.bind(this);
 
         getExtrasFromIntent();
 
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ViewPager viewPager = findViewById(R.id.viewPager);
-        setupViewPager(viewPager);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        }
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
-
-        ImageView imageView = findViewById(R.id.image);
+        setupViewPager(mViewPager);
+        mTabLayout.setupWithViewPager(mViewPager);
 
         Picasso.with(this)
                 .load(backdropPath)
                 .placeholder(R.drawable.default_image)
                 .error(R.drawable.default_image)
-                .into(imageView);
+                .into(mImageView);
 
-        Log.d(TAG, "poster path " + posterPath);
-
-        CollapsingToolbarLayout collapsingToolbarLayout = findViewById(R.id.collapsing_toolbar);
-        collapsingToolbarLayout.setTitle(titleMovie);
-
+        mCollapsingToolbarLayout.setTitle(titleMovie);
     }
 
     public void getExtrasFromIntent() {

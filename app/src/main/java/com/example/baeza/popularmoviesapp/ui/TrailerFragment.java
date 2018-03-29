@@ -20,6 +20,9 @@ import com.example.baeza.popularmoviesapp.model.data.network.model.movieTrailer.
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterTrailer;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -30,9 +33,12 @@ import rx.schedulers.Schedulers;
 
 public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListItemClickListener {
 
-    private RecyclerView mRecyclerView;
     public static final String MOVIE_ID = "movie_id";
     private MovieTrailer mMovieTrailer;
+
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    private Unbinder unbinder;
 
     private static final String BUNDLE_TRAILER_STATE = "bundle_trailer_position";
     private static final String BUNDLE_TRAILER_CONTENT = "bundle_trailer_content";
@@ -53,7 +59,9 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRecyclerView = new RecyclerView(getContext());
+        View view = inflater.inflate(R.layout.recyclerview_fragment, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -65,7 +73,7 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
             fillRecycler(mMovieTrailer);
         }
 
-        return mRecyclerView;
+        return view;
     }
 
 
@@ -125,5 +133,11 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
         super.onSaveInstanceState(outState);
         outState.putParcelable(BUNDLE_TRAILER_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
         outState.putParcelable(BUNDLE_TRAILER_CONTENT, mMovieTrailer);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        unbinder.unbind();
     }
 }

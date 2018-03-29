@@ -12,10 +12,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.baeza.popularmoviesapp.BuildConfig;
+import com.example.baeza.popularmoviesapp.R;
 import com.example.baeza.popularmoviesapp.model.data.network.model.movieReview.MovieReview;
 import com.example.baeza.popularmoviesapp.model.data.network.utilities.ApiUtils;
 import com.example.baeza.popularmoviesapp.ui.adapters.RVAdapterReview;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -27,9 +31,12 @@ import rx.schedulers.Schedulers;
 public class ReviewFragment extends Fragment {
 
     public static final String MOVIE_ID = "movie_id";
-
     private MovieReview mMovieReview;
-    private RecyclerView mRecyclerView;
+//    private RecyclerView mRecyclerView;
+
+    private Unbinder unbinder;
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
     private static final String BUNDLE_REVIEW_STATE = "bundle_review";
     private static final String BUNDLE_CONTENT = "bundle_content";
 
@@ -51,7 +58,10 @@ public class ReviewFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
 
-        mRecyclerView = new RecyclerView(container.getContext());
+//        mRecyclerView = new RecyclerView(container.getContext());
+        View view = inflater.inflate(R.layout.recyclerview_fragment, container, false);
+
+        unbinder = ButterKnife.bind(this, view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.setHasFixedSize(true);
@@ -63,7 +73,7 @@ public class ReviewFragment extends Fragment {
             mMovieReview = savedInstanceState.getParcelable(BUNDLE_CONTENT);
             fillRecycler(mMovieReview);
         }
-        return mRecyclerView;
+        return view;
     }
 
     private void requestMovieReview(final int movie_id, String api_key) {
@@ -102,5 +112,11 @@ public class ReviewFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putParcelable(BUNDLE_REVIEW_STATE, mRecyclerView.getLayoutManager().onSaveInstanceState());
         outState.putParcelable(BUNDLE_CONTENT, mMovieReview);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+//        unbinder.unbind();
     }
 }
