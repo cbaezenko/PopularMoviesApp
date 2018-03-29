@@ -91,7 +91,11 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     }
 
     private void setImagePoster(String poster_path) {
-        Picasso.with(getContext()).load(poster_path).into(ivPoster);
+        Picasso.with(getContext())
+                .load(poster_path)
+                .placeholder(R.drawable.default_image)
+                .error(R.drawable.default_image)
+                .into(ivPoster);
     }
 
     @Override

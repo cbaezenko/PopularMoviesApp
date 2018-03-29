@@ -61,7 +61,11 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         ImageView imageView = findViewById(R.id.image);
 
-        Picasso.with(this).load(backdropPath).into(imageView);
+        Picasso.with(this)
+                .load(backdropPath)
+                .placeholder(R.drawable.default_image)
+                .error(R.drawable.default_image)
+                .into(imageView);
 
         Log.d(TAG, "poster path " + posterPath);
 

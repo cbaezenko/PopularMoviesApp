@@ -60,6 +60,8 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
 
         Picasso.with(context)
                 .load(moviePath)
+                .placeholder(R.drawable.default_image)
+                .error(R.drawable.default_image)
                 .into(holder.imageMovie);
     }
 
