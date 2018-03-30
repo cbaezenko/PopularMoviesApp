@@ -47,8 +47,9 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        int movie_id = getArguments().getInt(MOVIE_ID);
+
         if (savedInstanceState == null) {
-            int movie_id = getArguments().getInt(MOVIE_ID);
             requestMovieTrailer(movie_id,
                     BuildConfig.KeyForMovies);
         }
@@ -138,6 +139,6 @@ public class TrailerFragment extends Fragment implements RVAdapterTrailer.ListIt
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        unbinder.unbind();
+        unbinder.unbind();
     }
 }

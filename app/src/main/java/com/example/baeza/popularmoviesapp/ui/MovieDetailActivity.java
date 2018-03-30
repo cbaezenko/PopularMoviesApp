@@ -69,6 +69,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         }
 
         setupViewPager(mViewPager);
+        mViewPager.setOffscreenPageLimit(10);
         mTabLayout.setupWithViewPager(mViewPager);
 
         Picasso.with(this)
@@ -100,11 +101,11 @@ public class MovieDetailActivity extends AppCompatActivity {
         adapter.addFragment(overviewFragment, "Overview");
 
         ReviewFragment reviewFragment = new ReviewFragment();
-        reviewFragment.setArguments(bundleReviewTrailer());
+        reviewFragment.setArguments(bundleReview());
         adapter.addFragment(reviewFragment, "Reviews");
 
         TrailerFragment trailerFragment = new TrailerFragment();
-        trailerFragment.setArguments(bundleReviewTrailer());
+        trailerFragment.setArguments(bundleTrailer());
         adapter.addFragment(trailerFragment, "Trailers");
 
         viewPager.setAdapter(adapter);
@@ -153,9 +154,15 @@ public class MovieDetailActivity extends AppCompatActivity {
         return bundle;
     }
 
-    private Bundle bundleReviewTrailer() {
+    private Bundle bundleReview() {
         Bundle bundle = new Bundle();
         bundle.putInt(ReviewFragment.MOVIE_ID, id);
+        return bundle;
+    }
+
+    private Bundle bundleTrailer() {
+        Bundle bundle = new Bundle();
+        bundle.putInt(TrailerFragment.MOVIE_ID, id);
         return bundle;
     }
 }

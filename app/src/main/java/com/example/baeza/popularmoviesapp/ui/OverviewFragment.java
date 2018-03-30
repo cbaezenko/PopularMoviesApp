@@ -210,6 +210,6 @@ public class OverviewFragment extends android.support.v4.app.Fragment implements
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-//        unbinder.unbind();
+        unbinder.unbind();
     }
 }
