@@ -37,13 +37,14 @@ import com.example.baeza.popularmoviesapp.ui.helper.InternetCheck;
 import java.io.IOException;
 import java.util.List;
 
+import butterknife.BindView;
 import rx.Subscriber;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements RVAdapterMainScreen.ListItemClickListener, RVAdapterMainScreenDB.ListItemClickListenerContentProvider {
 
-    private final static String TAG = "MainActivity";
     private static final String INFO_TO_KEEP = "info";
     private static final String STATE = "state";
 
@@ -55,10 +56,9 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     private EndlessRecyclerViewScrollListener scrollListener;
 
     public static TextView tv_error_msg;
-
     static ProgressBar progressBar;
 
-    private RecyclerView mRecyclerView;
+    @BindView(R.id.recyclerView_movies) RecyclerView mRecyclerView;
     private RVAdapterMainScreen mRVAdapterMainScreen;
 
     private int loadPage = 1;
@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Timber.plant(new Timber.DebugTree());
 
         FavoriteMovieDBHelper dbHelper = new FavoriteMovieDBHelper(this);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -430,7 +432,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
                     null,
                     null);
         } catch (Exception e) {
-            Log.e(TAG, "Failed to asynchronously load data.");
+            Timber.d("Failed to asynchronously load data.");
             e.printStackTrace();
             return null;
         }
@@ -521,7 +523,6 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
     }
 
     private void initUIComponents() {
-        mRecyclerView = findViewById(R.id.recyclerView_movies);
         progressBar = findViewById(R.id.progressBar);
         tv_error_msg = findViewById(R.id.tv_error_msg);
     }
@@ -530,7 +531,7 @@ public class MainActivity extends AppCompatActivity implements RVAdapterMainScre
         SharedPreferences sharedPreferences = getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.putInt(getString(R.string.preference_movies), state);
-        editor.commit();
+        editor.apply();
     }
 
     private int read_state_sharedPreference() {

@@ -16,6 +16,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by baeza on 19.02.2018.
  */
@@ -25,12 +26,10 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
     private ArrayList<Result> mResults;
     final private ListItemClickListener mOnClickListener;
     private Context context;
-//    private MovieRequest mMovieRequest;
 
     public RVAdapterMainScreen(Context context, ListItemClickListener listener, MovieRequest movieRequest) {
         mOnClickListener = listener;
         this.context = context;
-//        mMovieRequest = movieRequest;
     }
 
     public RVAdapterMainScreen(Context context, ListItemClickListener listener) {
@@ -51,9 +50,6 @@ public class RVAdapterMainScreen extends RecyclerView.Adapter<RVAdapterMainScree
 
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
-        //String path = "http://image.tmdb.org/t/p/w185//nBNZadXqJSdt05SHLqgT0HuC5Gm.jpg";
-//        String moviePath = ApiUtils.getUrlBaseForImageMovie() + (
-//                mMovieRequest.getResults().get(position).getPosterPath());
 
         String moviePath = ApiUtils.getUrlBaseForImageMovie() + (
                 mResults.get(position).getPosterPath());
