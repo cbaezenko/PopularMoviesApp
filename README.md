@@ -6,6 +6,9 @@ To use this app you will need to insert a key from https://www.themoviedb.org/.
 You can insert the API key into the gradle.properties files.
 KeyForMovies="KEY HERE"
 
+Application developed according to the [Common Project Requirements](http://udacity.github.io/android-nanodegree-guidelines/core.html) and 
+this [rubric](https://review.udacity.com/#!/rubrics/67/view)
+
 ### Libraries used:
 
 * Picasso : https://github.com/square/picasso
