@@ -24,4 +24,4 @@ KeyForMovies="KEY HERE"
 
 ## Application result:
 
-[!movie](movie.gif)
+![movie](movie.gif)
